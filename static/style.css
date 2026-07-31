@@ -1,0 +1,86 @@
+body {
+    background-color: #f4f8ff;
+    font-family: Arial, sans-serif;
+    color: #000;
+}
+
+form {
+    width: 1000px;
+    padding: 50px;
+    margin: 50px auto;
+    margin-top: 50px;
+    background-color: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 92, 243, 0.15);
+}
+
+form div {
+    margin-bottom: 20px;
+}
+
+label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 20px;
+    font-weight: 600;
+    color: #000;
+}
+
+input {
+    width: 100%;
+    padding: 14px;
+    font-size: 16px;
+    border: 1px solid #c9d9ff;
+    border-radius: 6px;
+    font-size: 14px;
+    color: #000;
+    box-sizing: border-box;
+}
+
+input:focus {
+    outline: none;
+    border-color: rgba(0, 92, 243, 1);
+    box-shadow: 0 0 5px rgba(0, 92, 243, 0.3);
+}
+
+a {
+    color: rgba(0, 92, 243, 1);
+    text-decoration: none;
+    font-size: 20px;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+/* Button */
+button {
+    width: 100%;
+    padding: 12px;
+    background-color: rgba(0, 92, 243, 1);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 20px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+button:hover {
+    background-color: rgb(0, 75, 200);
+}
+
+h1 { 
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-weight: 400;
+    margin-top: 20px;
+    text-align: center;
+    font-size: 75px;
+}
+
+.logo {
+    display: block;
+    width: auto;
+    height: auto;     
+    margin: 20px auto;
+}

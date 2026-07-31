@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 #This model stores the leave requests made by the user
 class LeaveRequest (models.Model):
     id = models.AutoField(primary_key=True)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="leave_requests")
     start_date = models.DateField()
     end_date = models.DateField()
 
@@ -25,7 +25,7 @@ class LeaveRequest (models.Model):
 
     created_at = models.DateTimeField(auto_now_add=True)
 
-    approved_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
+    approved_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name="approved_leave_requests")
 
     def __str__(self):
         return f"{self.user.username} - {self.leave_type} ({self.start_date} to {self.end_date})"

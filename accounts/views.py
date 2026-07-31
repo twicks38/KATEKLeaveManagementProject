@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from django.http import HttpResponseForbidden
+from django.http import HttpResponseForbidden, HttpResponse
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
 from django.contrib import messages
@@ -13,15 +13,15 @@ def login_page(request):
 
 def authenticate_user(request):
     if request.method == 'POST':
-        username = request.POST.get('pending')
-        password = request.POST.get('pending')
+        email = request.POST.get('email')
+        password = request.POST.get('password')
 
-        user = authenticate(request, username=username, password=password)
+        user = authenticate(request, email=email, password=password)
         if user is not None:
             login(request, user)
-            return redirect('location pending')
+            return HttpResponse("Pending redirection location")
 
         else: 
-            messages.error(request, 'Invalid username or password.')
+            messages.error(request, 'Invalid email address or password.')
 
     return HttpResponseForbidden("Invalid request method")

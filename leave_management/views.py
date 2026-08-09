@@ -1,57 +1,56 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
-from django.utils import timezone
-from datetime import timedelta
+from leave_management.services.leave_service import LeaveCalculations
 from leave_management.models import LeaveRequest
 
 # Create your views here.
 @login_required
-
 def home(request):
     user = request.user
+    calculations = LeaveCalculations()
 
-
-#This is to calculate the number of days taken for approved annual leave.
-#First it filters for the leave requests of the logged in user for type 'Annual' and status 'Approved'
-    approved_leave = LeaveRequest.objects.filter(
-        user=user,
-        leave_type='Annual',
-        status='Approved'
-    )
-
-#This calculate the number of days between the start and end date of each approved leave request 
-#+1 is added to include both the start and end date in the count
-#if and added to ensure both start and end dates are present to avoid calculation errors. 
-    days_taken = sum((request.end_date - request.start_date).days + 1 for request in approved_leave 
-                 if request.end_date and request.start_date
-                 )
-
-
-    entitlment = user.profile.leave_entitlement
-    remaining_leave = entitlment - days_taken
-
-    pending_count = LeaveRequest.objects.filter(
-        user = user,
-        status = 'Pending'
-    ).count()
-
-#This is to get the upcoming leave requests of the logged in user
-#It filters for start date that is on or after the current date and orders them by start date
-#Results are limited to the first 6 upcomimg requests to avoid overwhelming the display
-    today = timezone.now().date()
-
-    upcoming_leave = LeaveRequest.objects.filter(
-        user=user,
-        start_date__gte=today
-    ).order_by('start_date')[:6]
-
-#This dictionary is used to pass the calculated values to the template to allow dynamic rending of users information on the home page
     context = {
-        'days_taken': days_taken,
-        'remaining_leave': remaining_leave,
-        'pending_count': pending_count,
-        'upcoming_leave': upcoming_leave,
-
+        'days_taken': calculations.get_days_taken(user),
+        'remaining_leave': calculations.get_remaining_leave(user),
+        'pending_count': calculations.get_pending_leave_count(user),
+        'upcoming_leave': calculations.get_upcoming_leave(user),
     }
 
     return render(request, 'home.html', context)
+
+
+@login_required
+def user_leave_requests(request):
+    user = request.user
+
+    full_leave_history = LeaveRequest.objects.filter(user=user).order_by('start_date')
+
+    years = LeaveRequest.objects.filter(user=user).dates('start_date', 'year')
+
+    selected_status = request.GET.get('status')
+    selected_holiday_year = request.GET.get('holiday_year')
+    selected_start = request.GET.get('start_date')
+    selected_end = request.GET.get('end_date')
+
+    if selected_status:
+        full_leave_history = full_leave_history.filter(status=selected_status)
+
+    if selected_holiday_year:
+        full_leave_history = full_leave_history.filter(start_date__year=selected_holiday_year)
+
+    if selected_start:
+        full_leave_history = full_leave_history.filter(start_date__gte=selected_start)
+
+    if selected_end:
+        full_leave_history = full_leave_history.filter(end_date__lte=selected_end)
+
+    context = {
+        'full_leave_history': full_leave_history,
+        'years': years,
+        'selected_status': selected_status,
+        'selected_holiday_year': selected_holiday_year,
+        'selected_start': selected_start,
+        'selected_end': selected_end,
+    }
+
+    return render(request, 'user_leave_history.html', context)

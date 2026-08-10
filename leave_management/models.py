@@ -2,6 +2,8 @@ from django.db import models
 from django.contrib.auth.models import User
 
 #This model stores the leave requests made by the user
+
+
 class LeaveRequest (models.Model):
     id = models.AutoField(primary_key=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="leave_requests")
@@ -16,6 +18,9 @@ class LeaveRequest (models.Model):
     ]
     leave_type = models.CharField(choices=LEAVE_TYPES)
 
+    special_leave_type = models.ForeignKey('SpecialLeaveType', on_delete=models.SET_NULL, null=True, blank=True, related_name='special_leave_requests')
+    other_special_leave = models.CharField(max_length=255, null=True, blank=True)
+
     STATUS_CHOICES = [
         ("Pending", "Pending"),
         ("Approved", "Approved"),
@@ -29,6 +34,20 @@ class LeaveRequest (models.Model):
 
     def __str__(self):
         return f"{self.user.username} - {self.leave_type} ({self.start_date} to {self.end_date})"
+
+class SpecialLeaveType(models.Model):
+    id = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=255)
+
+    def __str__(self):
+        return f"{self.name}"
+
+class Entitlement(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    holiday_year = models.IntegerField()
+    total_entitlement = models.DecimalField(max_digits=5, decimal_places=2)
+    days_taken = models.DecimalField(max_digits=5, decimal_places=1, default=0)
+
 
 class AuditLog(models.Model):
     id = models.AutoField(primary_key=True)

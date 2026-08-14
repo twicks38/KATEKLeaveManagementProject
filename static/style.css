@@ -84,3 +84,15 @@ h1 {
     height: auto;     
     margin: 20px auto;
 }
+
+.message-error {
+    color: #d32f2f;
+    background-color: #fdecea;
+    border-radius: 6px;
+    padding: 16px 20px;
+    margin: 20px auto;
+    font-size: 25px;
+    width: 1000px;
+    box-sizing: border-box;
+    text-align: center;
+}

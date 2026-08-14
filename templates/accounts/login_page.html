@@ -16,7 +16,14 @@
         <h1>Welcome to KATEK Ltd.</h1>
     </div>
 
-<form method="post">
+    {% if messages %}
+        {% for message in messages %}
+            <p class="message-error"> {{ message }} </p>
+        {% endfor %}
+    {% endif %}
+
+<form method="post" action="{% url 'accounts:user_authenticate' %}">
+   
     {% csrf_token %}
 
     <div>

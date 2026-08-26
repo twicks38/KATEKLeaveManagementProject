@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+
+<div class="home_info">
+    <div class="left"> 
+        <p class="home_descriptors">Days Taken So Far</p>
+        <p class="home_stats">{{ days_taken }}</p>
+    </div>
+
+    <div class="center">
+        <p class="home_descriptors">Days Left</p>
+        <p class="home_stats">{{ remaining_leave }}</p>
+    </div>
+
+    <div class="right">
+        <p class="home_descriptors">Awaiting Approval</p>
+        <p class="home_stats">{{ pending_count }}</p>
+    </div>
+</div>
+
+<a href="{% url 'leave_management:leave_history' %}" class="table-link">
+    <div class="table-wrapper">
+        <table class="leave-table">
+            <thead>
+                <tr>
+                    <th colspan="4" class = "table-title">Recent and Upcoming Leave</th>
+                </tr>
+                <tr>
+                    <th>Type</th>
+                    <th>Date</th>
+                    <th>Status</th>
+                    <th>Details</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for leave in full_leave_history %}
+                <tr>
+                    <td>{{ leave.get_leave_type_display }}</td>
+                    <td>{{ leave.start_date }} - {{ leave.end_date }}</td>
+                    <td class = "
+                        {% if leave.status == 'Approved' %}
+                            leave-approved
+                        {% elif leave.status == 'Pending' %}
+                            leave-pending
+                        {% elif leave.status == 'Rejected' %}
+                          leave-rejected
+                        {% endif %}"
+                        >{{ leave.status }}</td>
+                    <td>Details</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="4">No leave requests found.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</a>
+
+{% endblock %}

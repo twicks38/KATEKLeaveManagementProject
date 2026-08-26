@@ -8,20 +8,12 @@ from .models import UserProfile
 
 # Create your views here.
 
-
 def login_page(request):
     return render(request, 'accounts/login_page.html')
 
-def change_password(request):
-    return render(request, 'accounts/change_password.html')
-
-def home_page(request):
-    return render(request, 'accounts/home_page.html')
-
-
 #stub first login data
 def is_first_login(user):
-        return True
+        return False
 
 def authenticate_user(request):
     if request.method == 'POST':
@@ -34,7 +26,7 @@ def authenticate_user(request):
 
             if is_first_login(user):
                 return redirect('accounts:change_password')
-            return redirect('accounts:home_page')
+            return redirect('leave_management:home')
 
         messages.error(request, 'Invalid username or password.')
         return redirect('accounts:login')
@@ -61,6 +53,6 @@ def change_password(request):
         user.set_password(new_password)
         user.save()
 
-        return redirect('accounts:home_page')
+        return redirect('leave_management:home')
 
     return render(request, 'accounts/change_password.html')

@@ -9,14 +9,17 @@ def home(request):
     user = request.user
     calculations = LeaveCalculations()
 
+    full_leave_history = LeaveRequest.objects.filter(user=user).order_by('-start_date')[:6]
+
     context = {
         'days_taken': calculations.get_days_taken(user),
         'remaining_leave': calculations.get_remaining_leave(user),
         'pending_count': calculations.get_pending_leave_count(user),
         'upcoming_leave': calculations.get_upcoming_leave(user),
+        'full_leave_history': full_leave_history,
     }
 
-    return render(request, 'home.html', context)
+    return render(request, 'accounts/home_page.html', context)
 
 
 @login_required
@@ -53,4 +56,4 @@ def user_leave_requests(request):
         'selected_end': selected_end,
     }
 
-    return render(request, 'user_leave_history.html', context)
+    return render(request, 'accounts/user_leave_history.html', context)

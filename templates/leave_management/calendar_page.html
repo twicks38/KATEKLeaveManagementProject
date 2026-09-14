@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+
+{% block title %}Calendar{% endblock %}
+
+{% block content %}
+
+<div class="calendar-container">
+    <div class="calendar-nav">
+        <a href="{% url 'leave_management:calendar' %}?month={{ prev_month }}&year={{ prev_year }}"
+        class="calendar-button">Previous Month</a>
+
+        <h2>{{ month_name }} {{ year }}</h2>
+
+        <a href="{% url 'leave_management:calendar' %}?month={{ next_month }}&year={{ next_year }}"
+        class="calendar-nav">Next Month</a>
+    </div>
+
+    <table class="calendar-table">
+        <thread>
+            <tr>
+                <th>Sunday</th>
+                <th>Monday</th>
+                <th>Tuesday</th>
+                <th>Wednesday</th>
+                <th>Thursday</th>
+                <th>Friday</th>
+                <th>Saturday</th>
+            </tr>
+        </thread>
+
+        <tbody>
+            {% for week in calendar_days %}
+                <tr>
+                    {% for day in week %}
+
+                        <td>
+                            {% if day.day %}
+
+                                <div class="day-number">
+                                    {{ day.day }}
+                                </div>
+                                {% for leave_management in day.request_day %}
+                                    <div class="leave-request leave-{{leave_request.status|lower }}">
+                                        <strong>
+                                            {{ leave_request.get_leave_type_display }}
+                                        </strong>
+
+                                        <span>
+                                            {{ leave_request.get_status_display }}
+                                        </span>
+                                    </div>
+                                {% endfor %
+                            {% endif %}}
+                        </td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

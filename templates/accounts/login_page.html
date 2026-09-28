@@ -1,47 +1,47 @@
 {% load static %}
 
-<!DOCTYPE html>
+<!doctype html>
 <html>
-<head>
+  <head>
     <title>Login</title>
-    <link rel="stylesheet" href="{% static 'style.css' %}">
-</head>
+    <link rel="stylesheet" href="{% static 'style.css' %}" />
+  </head>
 
-<body>
+  <body>
     <div>
-        <img class = "logo" src="{% static 'images/logo.png' %}" alt="KATEK Logo">
+      <img
+        class="logo"
+        src="{% static 'images/logo.png' %}"
+        alt="KADTEK Logo"
+      />
     </div>
     <div>
-        <h1>Welcome to KATEK Ltd.</h1>
+      <h1>Welcome to KADTEK Ltd.</h1>
     </div>
 
-    {% if messages %}
-        {% for message in messages %}
-            <p class="message-error"> {{ message }} </p>
-        {% endfor %}
-    {% endif %}
+    {% if messages %} {% for message in messages %}
+    <p class="message-error">{{ message }}</p>
+    {% endfor %} {% endif %}
 
-<form method="post" action="{% url 'accounts:user_authenticate' %}">
-   
-    {% csrf_token %}
-    <div>
+    <form method="post" action="{% url 'accounts:user_authenticate' %}">
+      {% csrf_token %}
+      <div>
         <label for="username">Username</label>
-        <input type="text" id="username" name="username" required>
-    </div>
+        <input type="text" id="username" name="username" required />
+      </div>
 
-    <div>
+      <div>
         <label for="password">Password</label>
-        <input type="password" id="password" name="password" required>
-    </div>
+        <input type="password" id="password" name="password" required />
+      </div>
 
-    <div>
+      <div>
         <a href="#">Forgot password?</a>
-    </div>
+      </div>
 
-    <div>
+      <div>
         <button type="submit">Log in</button>
-    </div>
-</form>
-
-</body>
+      </div>
+    </form>
+  </body>
 </html>

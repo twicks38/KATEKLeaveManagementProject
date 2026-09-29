@@ -26,7 +26,11 @@ class LeaveRequest (models.Model):
         ("Approved", "Approved"),
         ("Rejected", "Rejected"),
     ]
-    status = models.CharField(choices=STATUS_CHOICES, default="Pending")
+    status = models.CharField(
+        max_length=20,
+        choices=STATUS_CHOICES, 
+        default="Pending"
+        )
 
     created_at = models.DateTimeField(auto_now_add=True)
 

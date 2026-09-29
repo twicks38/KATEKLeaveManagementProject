@@ -1,47 +1,53 @@
 {% load static %}
 
-<!DOCTYPE html>
+<!doctype html>
 <html>
-<head>
+  <head>
     <title>Login</title>
-    <link rel="stylesheet" href="{% static 'style.css' %}">
-</head>
+    <link rel="stylesheet" href="{% static 'style.css' %}" />
+  </head>
 
-<body>
-    <div>
-        <img class = "logo" src="{% static 'images/logo.png' %}" alt="KATEK Logo">
+  <body>
+    <div class="login-body">
+      <div class="login-container">
+        <div class="login-header">
+          <img
+            class="login-header-logo"
+            src="{% static 'images/logo.png' %}"
+            alt="KATEK Logo"
+          />
+          <h1>Welcome to KATEK Ltd.</h1>
+        </div>
+
+        {% if messages %} {% for message in messages %}
+        <p class="message-{{ message.tags }}">{{ message }}</p>
+        {% endfor %} {% endif %}
+
+        <form
+          class="login-form"
+          method="post"
+          action="{% url 'accounts:user_authenticate' %}"
+        >
+          {% csrf_token %}
+          <div>
+            <label for="username">Username</label>
+            <input type="text" id="username" name="username" required />
+          </div>
+
+          <div>
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" required />
+          </div>
+
+          <div>
+            <a href="{% url 'accounts:forgot_password' %}">Forgot password?</a>
+          </div>
+
+          <div>
+            <button type="submit">Log in</button>
+          </div>
+        </form>
+      </div>
     </div>
-    <div>
-        <h1>Welcome to KATEK Ltd.</h1>
-    </div>
-
-    {% if messages %}
-        {% for message in messages %}
-            <p class="message-error"> {{ message }} </p>
-        {% endfor %}
-    {% endif %}
-
-<form method="post" action="{% url 'accounts:user_authenticate' %}">
-   
-    {% csrf_token %}
-    <div>
-        <label for="username">Username</label>
-        <input type="text" id="username" name="username" required>
-    </div>
-
-    <div>
-        <label for="password">Password</label>
-        <input type="password" id="password" name="password" required>
-    </div>
-
-    <div>
-        <a href="#">Forgot password?</a>
-    </div>
-
-    <div>
-        <button type="submit">Log in</button>
-    </div>
-</form>
-
-</body>
+  </body>
 </html>

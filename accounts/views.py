@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponseForbidden, HttpResponse
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -8,20 +8,15 @@ from .models import UserProfile
 
 # Create your views here.
 
-
 def login_page(request):
+    if request.user.is_authenticated:
+        return redirect('leave_management:home')
+    
     return render(request, 'accounts/login_page.html')
-
-def change_password(request):
-    return render(request, 'accounts/change_password.html')
-
-def home_page(request):
-    return render(request, 'accounts/home_page.html')
-
 
 #stub first login data
 def is_first_login(user):
-        return True
+        return False
 
 def authenticate_user(request):
     if request.method == 'POST':
@@ -34,7 +29,7 @@ def authenticate_user(request):
 
             if is_first_login(user):
                 return redirect('accounts:change_password')
-            return redirect('accounts:home_page')
+            return redirect('leave_management:home')
 
         messages.error(request, 'Invalid username or password.')
         return redirect('accounts:login')
@@ -61,6 +56,28 @@ def change_password(request):
         user.set_password(new_password)
         user.save()
 
-        return redirect('accounts:home_page')
+        return redirect('leave_management:home')
 
     return render(request, 'accounts/change_password.html')
+
+@login_required
+def user_logout(request):
+    logout(request)
+    return redirect('accounts:login')
+
+def forgot_password(request):
+    return render(request, 'accounts/forgot_password.html')
+
+def pass_reset_req(request):
+    if request.method == "POST":
+        username = request.POST.get("username")
+
+        # Password-reset processing will go here.
+        messages.success(
+            request,
+            "If the username exists, a password reset request has been submitted."
+        )
+
+        return redirect("accounts:login")
+
+    return redirect("accounts:forgot_password")

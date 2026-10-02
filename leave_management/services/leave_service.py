@@ -22,7 +22,15 @@ class LeaveCalculations:
 
     def get_remaining_leave(self, user):
         current_year = date.today().year
-        entitlement_record = Entitlement.objects.get(user=user, holiday_year=current_year)
+
+        entitlement_record, _ = Entitlement.objects.get_or_create(
+            user=user,
+            holiday_year=current_year,
+            defaults={
+                "total_entitlement": 25,
+                "days_taken": 0
+            }
+        )
         remaining_leave = entitlement_record.total_entitlement - entitlement_record.days_taken
         return remaining_leave
 

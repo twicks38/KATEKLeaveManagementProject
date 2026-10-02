@@ -16,7 +16,10 @@ class LeaveRequest (models.Model):
         ("Mat", "Maternity Leave"),
         ("Pat", "Paternity Leave"),
     ]
-    leave_type = models.CharField(choices=LEAVE_TYPES)
+    leave_type = models.CharField(
+        max_length=20,
+        choices=LEAVE_TYPES
+    )
 
     special_leave_type = models.ForeignKey('SpecialLeaveType', on_delete=models.SET_NULL, null=True, blank=True, related_name='special_leave_requests')
     other_special_leave = models.CharField(max_length=255, null=True, blank=True)
@@ -28,9 +31,9 @@ class LeaveRequest (models.Model):
     ]
     status = models.CharField(
         max_length=20,
-        choices=STATUS_CHOICES, 
+        choices=STATUS_CHOICES,
         default="Pending"
-        )
+    )
 
     created_at = models.DateTimeField(auto_now_add=True)
 
@@ -52,6 +55,13 @@ class Entitlement(models.Model):
     total_entitlement = models.DecimalField(max_digits=5, decimal_places=2)
     days_taken = models.DecimalField(max_digits=5, decimal_places=1, default=0)
 
+    class Meta:
+            constraints = [
+                models.UniqueConstraint(
+                     fields=["user", "holiday_year"],
+                     name="unique_user_holiday_year"
+                )
+            ]
 
 class AuditLog(models.Model):
     id = models.AutoField(primary_key=True)

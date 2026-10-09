@@ -1,7 +1,8 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 from leave_management.services.leave_service import LeaveCalculations
-from leave_management.models import LeaveRequest
+from leave_management.models import LeaveRequest, SpecialLeaveType
 
 # Create your views here.
 @login_required
@@ -20,7 +21,6 @@ def home(request):
     }
 
     return render(request, 'accounts/home_page.html', context)
-
 
 @login_required
 def user_leave_requests(request):
@@ -57,3 +57,40 @@ def user_leave_requests(request):
     }
 
     return render(request, 'accounts/user_leave_history.html', context)
+
+@login_required
+def leave_request_form(request):
+    if request.method == "POST":
+        leave_type = request.POST.get("leavetype")
+        start_date = request.POST.get("startdate")
+        end_date = request.POST.get("enddate")
+        special_leave_reason = request.POST.get("special_leave_reason")
+        special_leave_desc = request.POST.get("special_leave_desc")
+        leave_request = LeaveRequest(user=request.user, leave_type=leave_type, start_date=start_date, end_date=end_date)
+
+        if not start_date or not end_date:
+            messages.error(request, "Please enter both a start date and an end date.")
+            return render(request, 'accounts/leave_request_form.html')
+
+        if start_date > end_date:
+            messages.error(request, "The end date cannot be before the start date.")
+            return render(request, 'accounts/leave_request_form.html')
+
+        if leave_type == "Special":
+            if not special_leave_reason:
+                messages.error(request, "Please select a special leave reason.")
+                return render(request, 'accounts/leave_request_form.html')
+
+        if special_leave_reason == "Other" and not special_leave_desc:
+            messages.error(request, "Please provide a description for Other special leave.")
+            return render(request, 'accounts/leave_request_form.html')
+
+        if leave_type == "Special":
+            if special_leave_reason == "Other":
+                leave_request.other_special_leave = special_leave_desc
+            else:
+                leave_request.special_leave_type = SpecialLeaveType.objects.get(name=special_leave_reason)
+
+        leave_request.save()
+        return redirect("leave_management:home")
+    return render(request, 'accounts/leave_request_form.html')

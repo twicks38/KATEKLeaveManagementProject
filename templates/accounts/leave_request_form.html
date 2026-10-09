@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+
+{% block title %}Request Leave{% endblock %}
+
+{% block content %}
+
+<h1>Leave Request Form</h1>
+
+<form method="POST">
+    {% csrf_token %}
+
+    <div>
+        <label for="leave_type">Type of Leave</label>
+        <select name="leavetype" id="leave_type">
+            <option value="Annual">Annual Leave</option>
+            <option value="Special">Special Leave</option>
+            <option value="Mat">Maternity Leave</option>
+            <option value="Pat">Paternity Leave</option>
+        </select>
+    </div>
+
+    <div>
+        <label for="start_date">Start Date:</label>
+        <input type="date" id="start_date" name="startdate">
+    </div>
+
+    <div>
+        <label for="end_date">End Date:</label>
+        <input type="date" id="end_date" name="enddate">
+    </div>
+
+    <div id="special_leave_div" style="display: none;">
+        <label for="special_leave_reason">Special Leave Reason</label>
+
+        <select name="special_leave_reason" id="special_leave_reason">
+            <option value="Bereavement">Bereavement</option>
+            <option value="Medical">Medical</option>
+            <option value="Other">Other</option>
+        </select>
+    </div>
+  
+      <div id="special_leave_desc_div" style="display: none;">
+        <label for="special_leave_desc_div">Special Leave Description</label>
+        <input type="input" id="special_leave_desc" name="special_leave_desc" required>
+    </div>
+    
+    <button type="submit">Submit Request</button>
+</form>
+    
+<script>
+    const leaveType = document.getElementById("leave_type");
+    const specialLeaveDiv = document.getElementById("special_leave_div");
+    const specialLeaveReason = document.getElementById("special_leave_reason");
+    const specialLeaveDescDiv = document.getElementById("special_leave_desc_div");
+    const specialLeaveDesc = document.getElementById("special_leave_desc");
+
+    leaveType.addEventListener("change", function() {
+        if (leaveType.value === "Special") {
+            specialLeaveDiv.style.display = "block";
+        } else {
+            specialLeaveDiv.style.display = "none";
+            specialLeaveDescDiv.style.display = "none";
+        }});
+
+    specialLeaveReason.addEventListener("change", function() {
+        if (specialLeaveReason.value === "Other") {
+            specialLeaveDescDiv.style.display = "block";
+        } else {
+            specialLeaveDescDiv.style.display = "none";
+        }});
+</script>
+
+{% endblock %}

@@ -3,7 +3,6 @@ from django.contrib.auth.models import User
 
 #This model stores the leave requests made by the user
 
-
 class LeaveRequest (models.Model):
     id = models.AutoField(primary_key=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="leave_requests")

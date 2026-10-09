@@ -14,7 +14,7 @@
 - **git add** - _Stage changes_
   - **git add `<filename>`** - _Stage a specific file_
   - **git add `-A` / `-all`** - _Stage all changes_
-
+- **git commit** - _Lets you write a commit message for your commit_
 - **git push** - _Push your changes up_ **Never push changes directly to main.**
   - **git push --set-upstream origin `your branch`** - _In case of upstream errors_
     - _If that fails because you already pushed up to it add a space and then_ **-f** _after your branch name._
@@ -32,6 +32,19 @@ Push your branch to GitHub and open a Pull Request (PR) for review.
 Only merge into main once the Pull Request has been approved and all required checks have passed.
 
 When a branch has been pushed and is ready to be merged, a merge request can be made via Github in your browser.
+
+### Example of making a new branch and pushing it up
+
+1. git checkout origin/main
+2. git pull
+3. git checkout origin/main -b dev/MyNewChanges
+4. ** do your code **
+5. git add --all
+6. git commit
+7. ** write your commit msg, title + desc then press commit button**
+8. git push --set-upstream origin/main -b dev/MyNewChanges
+9. click on the github link and submit a merge review.
+10. ask for reviews then merge in when you have one review.
 
 ## Starting project for testing.
 

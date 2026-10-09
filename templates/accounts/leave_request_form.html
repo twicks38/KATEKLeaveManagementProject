@@ -9,65 +9,87 @@
 <form method="POST">
     {% csrf_token %}
 
-    <div>
-        <label for="leave_type">Type of Leave</label>
-        <select name="leavetype" id="leave_type">
-            <option value="Annual">Annual Leave</option>
-            <option value="Special">Special Leave</option>
-            <option value="Mat">Maternity Leave</option>
-            <option value="Pat">Paternity Leave</option>
-        </select>
-    </div>
+    {% if form.non_field_errors %}
+        <div class="message-error">
+            {% for error in form.non_field_errors %}
+                <p>{{ error }}</p>
+            {% endfor %}
+        </div>
+    {% endif %}
 
     <div>
-        <label for="start_date">Start Date:</label>
-        <input type="date" id="start_date" name="startdate">
+        {{ form.leave_type.label_tag }}
+        {{ form.leave_type }}
+        {{ form.leave_type.errors }}
     </div>
 
     <div>
-        <label for="end_date">End Date:</label>
-        <input type="date" id="end_date" name="enddate">
+        {{ form.start_date.label_tag }}
+        {{ form.start_date }}
+        {{ form.start_date.errors }}
     </div>
 
-    <div id="special_leave_div" style="display: none;">
-        <label for="special_leave_reason">Special Leave Reason</label>
+    <div>
+        {{ form.end_date.label_tag }}
+        {{ form.end_date }}
+        {{ form.end_date.errors }}
+    </div>
 
-        <select name="special_leave_reason" id="special_leave_reason">
-            <option value="Bereavement">Bereavement</option>
-            <option value="Medical">Medical</option>
-            <option value="Other">Other</option>
-        </select>
+    <div id="special_leave_div" style="display:none;">
+        {{ form.special_leave_reason.label_tag }}
+        {{ form.special_leave_reason }}
+        {{ form.special_leave_reason.errors }}
     </div>
-  
-      <div id="special_leave_desc_div" style="display: none;">
-        <label for="special_leave_desc_div">Special Leave Description</label>
-        <input type="input" id="special_leave_desc" name="special_leave_desc" required>
+
+    <div id="special_leave_description_div" style="display:none;">
+        {{ form.special_leave_description.label_tag }}
+        {{ form.special_leave_description }}
+        {{ form.special_leave_description.errors }}
     </div>
-    
+
     <button type="submit">Submit Request</button>
 </form>
-    
-<script>
-    const leaveType = document.getElementById("leave_type");
-    const specialLeaveDiv = document.getElementById("special_leave_div");
-    const specialLeaveReason = document.getElementById("special_leave_reason");
-    const specialLeaveDescDiv = document.getElementById("special_leave_desc_div");
-    const specialLeaveDesc = document.getElementById("special_leave_desc");
 
-    leaveType.addEventListener("change", function() {
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const leaveType = document.getElementById("leave_type");
+    const specialReason = document.getElementById("special_leave_reason");
+
+    const specialLeaveDiv =
+        document.getElementById("special_leave_div");
+
+    const specialLeaveDescDiv =
+        document.getElementById("special_leave_description_div");
+
+    function updateVisibility() {
+
         if (leaveType.value === "Special") {
             specialLeaveDiv.style.display = "block";
         } else {
             specialLeaveDiv.style.display = "none";
             specialLeaveDescDiv.style.display = "none";
-        }});
+            return;
+        }
 
-    specialLeaveReason.addEventListener("change", function() {
-        if (specialLeaveReason.value === "Other") {
+        const selectedOption =
+            specialReason.options[specialReason.selectedIndex];
+
+        if (
+            selectedOption &&
+            selectedOption.text.trim() === "Other"
+        ) {
             specialLeaveDescDiv.style.display = "block";
         } else {
             specialLeaveDescDiv.style.display = "none";
-        }});
+        }
+    }
+
+    leaveType.addEventListener("change", updateVisibility);
+    specialReason.addEventListener("change", updateVisibility);
+
+    updateVisibility();
+});
 </script>
 
 {% endblock %}

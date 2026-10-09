@@ -1,6 +1,6 @@
 from datetime import timedelta, date
-from django.utils import timezone
 from leave_management.models import LeaveRequest, Entitlement
+from django.db import transaction
 
 class LeaveCalculations:
     def calculate_days_taken(self, start_date, end_date):
@@ -41,3 +41,42 @@ class LeaveCalculations:
         today = date.today()
         return LeaveRequest.objects.filter(user=user, start_date__gte=today).order_by('start_date')[:6]
     
+class LeaveRequestService:
+
+    @staticmethod
+    @transaction.atomic # DjangoDB feature that ensures either all operations succeed or none do.
+    def create_leave_request(user, cleaned_data):
+
+        leave_request = LeaveRequest(
+            user=user,
+            leave_type=cleaned_data["leave_type"],
+            start_date=cleaned_data["start_date"],
+            end_date=cleaned_data["end_date"],
+        )
+
+        special_leave_reason = cleaned_data.get(
+            "special_leave_reason"
+        )
+
+        special_leave_description = cleaned_data.get(
+            "special_leave_description"
+        )
+
+        if cleaned_data["leave_type"] == "Special":
+
+            if (
+                special_leave_reason
+                and special_leave_reason.name == "Other"
+            ):
+                leave_request.other_special_leave = (
+                    special_leave_description
+                )
+
+            else:
+                leave_request.special_leave_type = (
+                    special_leave_reason
+                )
+
+        leave_request.save()
+
+        return leave_request

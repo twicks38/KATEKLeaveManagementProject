@@ -14,6 +14,8 @@
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
+    
+    {% block extra_css %}{% endblock %}
   </head>
 
   <body>
@@ -38,22 +40,35 @@
         <div class="collapse navbar-collapse" id="navbarNav">
           <ul class="navbar-nav">
             <li class="nav-item">
-              <a class="nav-link" href="{% url 'leave_management:home' %}">
+              <a class="nav-link
+              {% if request.resolver_match.url_name == 'home' %}
+              active
+              {% endif %}
+              " href="{% url 'leave_management:home' %}">
                 Home
               </a>
             </li>
 
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'leave_management:leave_history' %}">
-                            Leave History
-                        </a>
-                    </li>
+            <li class="nav-item">
+              <a class="nav-link
+              {% if request.resolver_match.url_name == 'personal_calendar' %}
+              active
+              {% endif %}
+              " href="{% url 'leave_management:personal_calendar' %}">
+                Calendar
+              </a>
+            </li>
 
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'leave_management:leave_request_form' %}">
-                            Request Leave
-                        </a>
-                    </li>
+            <li class="nav-item">
+              <a
+                class="nav-link
+                {% if request.resolver_match.url_name == 'leave_history' %}
+                active
+                {% endif %}
+                " href="{% url 'leave_management:leave_history' %}">
+                Leave History
+              </a>
+            </li>
 
             <li class="nav-item">
               <a class="nav-link" href="{% url 'accounts:user_logout' %}">

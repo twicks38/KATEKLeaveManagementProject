@@ -1,8 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-from django.contrib import messages
-from leave_management.forms.leave_forms import LeaveRequestForm
-from leave_management.services.leave_service import LeaveCalculations, LeaveRequestService
+from leave_management.services.leave_service import LeaveCalculations
+from leave_management.services.calendar_service import calendar_service
 from leave_management.models import LeaveRequest
 
 # Create your views here.
@@ -59,32 +58,6 @@ def user_leave_requests(request):
 
     return render(request, 'accounts/user_leave_history.html', context)
 
-@login_required
-def leave_request_form(request):
-    form = LeaveRequestForm(
-        request.POST or None,
-        user=request.user
-    )
-
-    if request.method == "POST" and form.is_valid():
-        LeaveRequestService.create_leave_request(
-            user=request.user,
-            cleaned_data=form.cleaned_data,
-        )
-
-        messages.success(
-            request,
-            "Your leave request has been submitted successfully.",
-        )
-
-        return redirect("leave_management:home")
-
-    context = {
-        "form": form,
-    }
-
-    return render(
-        request,
-        "accounts/leave_request_form.html",
-        context,
-    )
+def personal_calendar(request):
+    context = calendar_service(request)
+    return render(request, 'leave_management/calendar_page.html', context)

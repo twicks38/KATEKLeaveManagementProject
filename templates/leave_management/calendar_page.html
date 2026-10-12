@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Calendar{% endblock %}
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'additional_css/calendar.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<div class="calendar-container">
+    <div class="calendar-nav">
+        <a href="{% url 'leave_management:personal_calendar' %}?month={{ prev_month }}&year={{ prev_year }}"
+        class="calendar-button">Previous Month</a>
+
+        <h2>{{ month_name }} {{ year }}</h2>
+
+        <a href="{% url 'leave_management:personal_calendar' %}?month={{ next_month }}&year={{ next_year }}"
+        class="calendar-button">Next Month</a>
+    </div>
+    <div class="calendar">
+        <div class="calendar-header">
+            <div>Sunday</div>
+            <div>Monday</div>
+            <div>Tuesday</div>
+            <div>Wednesday</div>
+            <div>Thursday</div>
+            <div>Friday</div>
+            <div>Saturday</div>
+        </div>
+
+        <div class="calendar-body">
+            {% for week in calendar_weeks %}
+                <div class="calendar-week" style="--lane-count: {{ week.lane_count }};">
+                    {% for day in week.days %}
+                        <div class="calendar-day
+                            {% if not day.is_current_month %}
+                                other-month
+                            {% endif %}">
+                        
+                            {% if day.day %}
+                                <div class="day-number">
+                                    {{day.day}}
+                                </div>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+
+                    {% for segment in week.leave_segments %}
+                        <div class="leave-bar leave-{{ segment.leave_request.status|lower }}"
+                            style="--start-column: {{ segment.start_column }};
+                            --span: {{segment.span }};
+                            --lane: {{segment.lane}};">
+                            
+                            <strong>
+                                {{ segment.leave_request.get_leave_type_display }}
+                            </strong>
+                            <span>
+                                {{ segment.leave_request.get_status_display}}
+                            </span>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+   
+</div>
+{% endblock %}

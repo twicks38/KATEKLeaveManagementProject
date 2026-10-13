@@ -51,6 +51,10 @@
                             style="--start-column: {{ segment.start_column }};
                             --span: {{segment.span }};
                             --lane: {{segment.lane}};">
+
+                            <strong>
+                                {{ segment.leave_request.user.first_name }} {{ segment.leave_request.user.last_name }}
+                            </strong>
                             
                             <strong>
                                 {{ segment.leave_request.get_leave_type_display }}

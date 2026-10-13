@@ -92,5 +92,9 @@ def leave_request_form(request):
 
 
 def personal_calendar(request):
-    context = calendar_service(request)
+    context = calendar_service(request, False)
+    return render(request, 'leave_management/calendar_page.html', context)
+
+def team_calendar(request):
+    context = calendar_service(request, True)
     return render(request, 'leave_management/calendar_page.html', context)

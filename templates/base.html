@@ -83,7 +83,7 @@
             {% if request.user|user_type:"Manager" %}
               <li class="nav-item">
                 <a class="nav-link
-                {% if request.resolver_match.url_name == 'team_calendar_manager' %}
+                {% if request.resolver_match.url_name == 'team_calendar' %}
                 active
                 {% endif %}
                 " href="{% url 'leave_management:team_calendar' %}">

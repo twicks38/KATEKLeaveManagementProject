@@ -162,7 +162,8 @@ def calendar_service(request, team_calendar):
         "prev_month": prev_month,
         "prev_year": prev_year,
         "next_month": next_month,
-        "next_year": next_year
+        "next_year": next_year,
+        "team_calendar": team_calendar,
     }
 
     return context

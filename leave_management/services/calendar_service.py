@@ -16,7 +16,9 @@ def calendar_service(request, team_calendar):
     last_day = datetime(year, month, calendar.monthrange(year, month)[1]).date() #last day in the month
 
     #gets all of the user requests for the user and order by start date and if approved or not
-    all_user_requests = []
+    all_user_requests = []  #list created as it allows for the same logic flow
+
+    #Leave requests for individual user
     if not team_calendar:
         user_requests = LeaveRequest.objects.filter(
             user = request.user,
@@ -26,20 +28,24 @@ def calendar_service(request, team_calendar):
         ).order_by('start_date')
         all_user_requests.extend(user_requests)
 
+
+    #If it is a team calendar run code below
     else:
+        #gets the team ID of the manager logged in
         team_id = TeamMembership.objects.get(
             user = request.user,
             role__name = "Manager",
             active=True
         ).team
 
+        #Gets the employees apart of the same team as the manager
         employees = User.objects.filter(
             teammembership__team=team_id,
             teammembership__active = True
         ).distinct()
 
      
-        for employee in employees:
+        for employee in employees: #Loops through each employee and gets leave records
             user_request = LeaveRequest.objects.filter(
                 user=employee,
                 start_date__lte = last_day,
@@ -47,6 +53,7 @@ def calendar_service(request, team_calendar):
                 status__in = ["Approved", "Pending"],
             ).order_by("start_date")
 
+            #Adds records to list
             all_user_requests.extend(user_request)
 
 

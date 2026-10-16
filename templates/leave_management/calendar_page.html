@@ -65,15 +65,17 @@
                             style="--start-column: {{ segment.start_column }};
                             --span: {{segment.span }};
                             --lane: {{segment.lane}};">
-                            <span class="name">
-                                {% if segment.leave_request.user == request.user %}
-                                    <strong>My Leave</strong>
-                                {% else %}
-                                    <strong>
-                                        {{ segment.leave_request.user.first_name }} {{ segment.leave_request.user.last_name }}
-                                    </strong>
-                                {% endif %}
-                            </span>
+                            {% if team_calendar %}
+                                <span class="name">
+                                    {% if segment.leave_request.user == request.user %}
+                                        <strong>My Leave</strong>
+                                    {% else %}
+                                        <strong>
+                                            {{ segment.leave_request.user.first_name }} {{ segment.leave_request.user.last_name }}
+                                        </strong>
+                                    {% endif %}
+                                </span>
+                            {% endif %}
                             <strong>
                                 {{ segment.leave_request.get_leave_type_display }}
                             </strong>

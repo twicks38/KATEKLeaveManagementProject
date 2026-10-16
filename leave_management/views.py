@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.http import HttpResponseForbidden
 from leave_management.forms.leave_forms import LeaveRequestForm
 from leave_management.services.leave_service import LeaveCalculations, LeaveRequestService
 from leave_management.services.calendar_service import calendar_service
@@ -90,11 +91,18 @@ def leave_request_form(request):
         context,
     )
 
-
+@login_required
 def personal_calendar(request):
-    context = calendar_service(request, False)
+    context = calendar_service(request, False) #passes false for individual calendar
     return render(request, 'leave_management/calendar_page.html', context)
 
+
+@login_required
 def team_calendar(request):
-    context = calendar_service(request, True)
+    #Filtering to prevent view running for non managers
+    if not request.user.groups.filter(name="Manager").exists():
+        return HttpResponseForbidden()
+
+
+    context = calendar_service(request, True) #passes true to confirm a team calendar
     return render(request, 'leave_management/calendar_page.html', context)

@@ -20,10 +20,6 @@
           <h1>Welcome to KADTEK Ltd.</h1>
         </div>
 
-        {% if messages %} {% for message in messages %}
-        <p class="message-{{ message.tags }}">{{ message }}</p>
-        {% endfor %} {% endif %}
-
         <form
           class="login-form"
           method="post"

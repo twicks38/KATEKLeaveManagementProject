@@ -1,8 +1,10 @@
 import calendar
 from datetime import datetime
 from leave_management.models import LeaveRequest
+from HR_management.models import TeamMembership
+from django.contrib.auth.models import User
 
-def calendar_service(request):
+def calendar_service(request, team_calendar):
     #Gets current month as default changes with user navigation
     month = int(request.GET.get('month', datetime.today().month))
     year = int(request.GET.get('year', datetime.today().year))
@@ -14,12 +16,46 @@ def calendar_service(request):
     last_day = datetime(year, month, calendar.monthrange(year, month)[1]).date() #last day in the month
 
     #gets all of the user requests for the user and order by start date and if approved or not
-    user_requests = LeaveRequest.objects.filter(
-        user = request.user,
-        start_date__lte = last_day,
-        end_date__gte = first_day,
-        status__in=["Approved", "Pending"],
-    ).order_by('start_date')
+    all_user_requests = []  #list created as it allows for the same logic flow
+
+    #Leave requests for individual user
+    if not team_calendar:
+        user_requests = LeaveRequest.objects.filter(
+            user = request.user,
+            start_date__lte = last_day,
+            end_date__gte = first_day,
+            status__in=["Approved", "Pending"],
+        ).order_by('start_date')
+        all_user_requests.extend(user_requests)
+
+
+    #If it is a team calendar run code below
+    else:
+        #gets the team ID of the manager logged in
+        team_id = TeamMembership.objects.get(
+            user = request.user,
+            role__name = "Manager",
+            active=True
+        ).team
+
+        #Gets the employees apart of the same team as the manager
+        employees = User.objects.filter(
+            teammembership__team=team_id,
+            teammembership__active = True
+        ).distinct()
+
+     
+        for employee in employees: #Loops through each employee and gets leave records
+            user_request = LeaveRequest.objects.filter(
+                user=employee,
+                start_date__lte = last_day,
+                end_date__gte = first_day,
+                status__in = ["Approved", "Pending"],
+            ).order_by("start_date")
+
+            #Adds records to list
+            all_user_requests.extend(user_request)
+
 
     calendar_weeks = [] #all of the weeks in the calendar will be stored here
 
@@ -30,7 +66,7 @@ def calendar_service(request):
 
         week_request = [
             leave_request
-            for leave_request in user_requests
+            for leave_request in all_user_requests
             if leave_request.start_date <= week_end and leave_request.end_date >= week_start
         ]
 
@@ -133,7 +169,8 @@ def calendar_service(request):
         "prev_month": prev_month,
         "prev_year": prev_year,
         "next_month": next_month,
-        "next_year": next_year
+        "next_year": next_year,
+        "team_calendar": team_calendar,
     }
 
     return context

@@ -168,7 +168,7 @@
     color: #047857;
 }
 
-.leave-approved strong{
+.leave-approved > strong{
     color: #047857;
 }
 
@@ -178,17 +178,10 @@
     color: #b45309;
 }
 
-.leave-pending strong{
+.leave-pending > strong{
     color: #b45309;
 }
 
-.leave-rejected {
-    background: white;
-    border-left-color: #ef4444;
-    color: #b91c1c;
+.name > strong{
+    color: black !important;
 }
-
-.leave-rejected strong{
-    color: #b91c1c;
-}
-

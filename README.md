@@ -50,13 +50,9 @@ When a branch has been pushed and is ready to be merged, a merge request can be 
 
 _use `py` instead of `python` for some python versions_
 
-Make sure DJANGO is installed
+To install all the latest requirements type:
 
-`python -m django --version`
-
-If not installed
-you can install it by:
-`pip install django`
+`python -m pip install -r requirements.txt`
 
 Once installed, run
 

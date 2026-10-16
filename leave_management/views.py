@@ -6,6 +6,7 @@ from leave_management.forms.leave_forms import LeaveRequestForm
 from leave_management.services.leave_service import LeaveCalculations, LeaveRequestService
 from leave_management.services.calendar_service import calendar_service
 from leave_management.models import LeaveRequest
+from datetime import date
 
 # Create your views here.
 @login_required
@@ -13,7 +14,10 @@ def home(request):
     user = request.user
     calculations = LeaveCalculations()
 
-    full_leave_history = LeaveRequest.objects.filter(user=user).order_by('-start_date')[:6]
+    full_leave_history = LeaveRequest.objects.filter(
+        user=user,
+        end_date__gte=date.today()
+    ).order_by('start_date')[:6]
 
     context = {
         'days_taken': calculations.get_days_taken(user),
@@ -29,7 +33,9 @@ def home(request):
 def user_leave_requests(request):
     user = request.user
 
-    full_leave_history = LeaveRequest.objects.filter(user=user).order_by('start_date')
+    full_leave_history = LeaveRequest.objects.filter(
+        user=user
+    ).order_by('-start_date')
 
     years = LeaveRequest.objects.filter(user=user).dates('start_date', 'year')
 

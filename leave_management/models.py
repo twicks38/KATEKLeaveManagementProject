@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+from leave_management.services.util import calculate_working_days
+
 #This model stores the leave requests made by the user
 
 class LeaveRequest (models.Model):
@@ -8,6 +10,13 @@ class LeaveRequest (models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="leave_requests")
     start_date = models.DateField()
     end_date = models.DateField()
+    
+    @property
+    def total_days(self):
+        return calculate_working_days(
+            self.start_date,
+            self.end_date
+        )
 
     LEAVE_TYPES = [
         ("Annual", "Annual Leave"),

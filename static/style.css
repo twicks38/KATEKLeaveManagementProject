@@ -4,13 +4,13 @@ body {
   color: #000;
 }
 
-.login-body {
-  width: min(90%, 900px);
+.whitespace-body {
+  width: min(90%, 1200px);
   margin: 0 auto;
   padding: 2rem;
 }
 
-.login-body:before {
+.whitespace-body:before {
   content: "";
   position: fixed;
   inset: 0;
@@ -21,6 +21,8 @@ body {
   pointer-events: none;
   z-index: -1;
 }
+
+/* Login Page Styles */
 
 .login-form {
   box-sizing: border-box;
@@ -36,6 +38,88 @@ body {
 .login-form div {
   margin-bottom: 20px;
 }
+
+.login-header {
+  text-align: center;
+}
+
+.login-header-logo {
+  display: block;
+  width: clamp(200px, 15%, 250px);
+  height: auto;
+  margin: 20px auto;
+}
+
+.login-header h1 {
+  font-size: clamp(2rem, 3vw, 4rem);
+}
+
+.login-container {
+  width: min(90%, 900px);
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+/* Home Page Styles */
+
+.home-dashboard {
+  width: 100%;
+  display: grid;
+  grid-template-columns: minmax(0, 3fr) minmax(200px, 1fr);
+  gap: 25px;
+  align-items: start;
+}
+
+.home_info {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 0;
+  margin: 0;
+}
+
+.left,
+.right,
+.center {
+  padding: 20px;
+  text-align: center;
+  border-top: 6px solid;
+  border-radius: 10px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  min-height: 125px;
+}
+
+.left {
+  border-top-color: #355db9;
+  background-color: #a5b9e3;
+}
+
+.center {
+  border-top-color: #20c75b;
+  background-color: #9be2b6;
+}
+
+.right {
+  border-top-color: #f3b831;
+  background-color: #fbe0a2;
+}
+
+.home_stats {
+  font-size: 36px;
+  margin: 0;
+}
+
+.home_descriptors {
+  font-size: 20px;
+  margin: 0 0 10px;
+}
+
+/* Form Styles */
 
 label {
   display: block;
@@ -62,12 +146,6 @@ input:focus {
   box-shadow: 0 0 5px rgba(0, 92, 243, 0.3);
 }
 
-a {
-  color: rgba(0, 92, 243, 1);
-  text-decoration: none;
-  font-size: 20px;
-}
-
 /* Button */
 button {
   width: 100%;
@@ -85,6 +163,198 @@ button:hover {
   background-color: rgb(0, 75, 200);
 }
 
+/* Leave Request Styles */
+.leave-request-form {
+  box-sizing: border-box;
+  width: clamp(80%, 100%, 120%);
+  padding: 50px;
+  margin: auto;
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 92, 243, 0.15);
+}
+
+.leave-request-form input,
+.leave-request-form select,
+.leave-request-form textarea {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 14px 16px;
+  font-size: 16px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  background-color: white;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
+  cursor: pointer;
+}
+
+.dropdown select {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 14px 45px 14px 16px;
+  font-size: 16px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  background-color: white;
+  appearance: none;
+
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 16px center;
+  background-size: 16px;
+
+  cursor: pointer;
+}
+
+.leave-request-form input:hover,
+.leave-request-form select:hover,
+.leave-request-form textarea:hover {
+  border-color: #0d6efd;
+  box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.12);
+}
+
+.leave-request-form h1 {
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  font-weight: 600;
+  text-align: center;
+  margin: -20px 0 20px 0;
+  color: #1f2937;
+  font-size: clamp(2rem, 36px, 4rem);
+}
+
+.leave-request-form div {
+  margin-bottom: 20px;
+}
+
+.leave-request-body {
+  width: min(90%, 900px);
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.leave-request-form button {
+  width: 100%;
+  margin-top: 12px;
+  padding: 14px 20px;
+  border: none;
+  border-radius: 8px;
+  background: #0d6efd;
+  color: white;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    background-color 0.2s,
+    transform 0.1s;
+}
+
+.leave-request-form button:hover {
+  background-color: #0b5ed7;
+  transform: translateY(-2px);
+}
+
+/* Leave Table Styles */
+.leave-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table-title {
+  text-align: center;
+  background-color: rgba(41, 83, 182, 1);
+  font-size: 22px;
+  color: white;
+}
+
+.leave-table th {
+  padding: 18px 24px;
+  border-bottom: 1px solid #c4c7cd;
+}
+
+.leave-table td {
+  padding: 18px 24px;
+  color: #475569;
+}
+
+.leave-table input,
+.leave-table select,
+.leave-table textarea {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 14px 16px;
+  font-size: 16px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  background-color: white;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
+  cursor: pointer;
+}
+
+.leave-table tbody tr {
+  transition: background-color 0.2s ease;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.leave-table tbody tr:last-child {
+  border-bottom: none;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 50px;
+  color: #777;
+}
+
+.leave-status {
+  background-color: white;
+}
+
+.leave-status.status {
+  display: inline-block;
+  padding: 6px 12px;
+  border-radius: 20px;
+
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.leave-status.pending {
+  background-color: #fff3cd;
+  color: #856404;
+}
+
+.leave-status.approved {
+  background-color: #d1e7dd;
+  color: #0f5132;
+}
+
+.leave-status.rejected {
+  background-color: #f8d7da;
+  color: #842029;
+}
+
+.table-link {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  width: 100%;
+  margin: auto auto;
+}
+
+.table-wrapper {
+  background: white;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+}
+
+/* General Styles */
+
 h1 {
   font-family: Verdana, Geneva, Tahoma, sans-serif;
   font-weight: 400;
@@ -93,32 +363,17 @@ h1 {
   font-size: 75px;
 }
 
+a {
+  color: rgba(0, 92, 243, 1);
+  text-decoration: none;
+  font-size: 20px;
+}
+
 .logo {
   display: block;
   width: auto;
   height: auto;
   margin: 20px auto;
-}
-
-.login-header {
-  text-align: center;
-}
-
-.login-header-logo {
-  display: block;
-  width: clamp(200px, 15%, 250px);
-  height: auto;
-  margin: 20px auto;
-}
-
-.login-header h1 {
-  font-size: clamp(2rem, 3vw, 4rem);
-}
-
-.login-container {
-  width: min(90%, 900px);
-  margin: 0 auto;
-  padding: 0 2rem;
 }
 
 .message-error {
@@ -140,110 +395,6 @@ h1 {
   padding: 16px 20px;
   font-size: 25px;
   box-sizing: border-box;
-}
-
-.table-link {
-  display: block;
-  text-decoration: none;
-  color: inherit;
-  width: 90%;
-  margin: auto auto;
-}
-
-.table-wrapper {
-  background: white;
-  border-radius: 14px;
-  overflow: hidden;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
-}
-
-.leave-table {
-  width: 100%;
-  margin: 0;
-}
-
-.leave-table th,
-.leave-table td {
-  font-size: 20px;
-  padding: 18px 20px;
-  border: 1px solid #2e2e2fe2;
-  vertical-align: middle;
-  font-weight: 600;
-  letter-spacing: 0.3px;
-}
-
-.leave-table tbody tr {
-  transition: background-color 0.2s ease;
-}
-
-.leave-table tbody tr:hover {
-  background-color: rgba(41, 83, 182, 0.04);
-}
-
-.empty-state {
-  text-align: center;
-  padding: 50px;
-  color: #777;
-}
-
-.table-title {
-  text-align: center;
-  background-color: #2953b6;
-  font-size: 22px;
-  color: white;
-}
-
-.leave-approved {
-  background-color: #20c75b;
-  color: white;
-}
-
-.leave-pending {
-  background-color: #f3b831;
-  color: white;
-}
-
-.leave-rejected {
-  background-color: #d23333;
-  color: white;
-}
-
-.home_info {
-  margin-top: 3%;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 20px 10%;
-}
-.left,
-.right,
-.center {
-  padding: 20px;
-  text-align: center;
-  border-top: 6px solid;
-  flex: 1;
-  margin: 20px;
-  border-radius: 2px;
-}
-
-.left {
-  border-top-color: #355db9;
-}
-
-.center {
-  border-top-color: #20c75b;
-}
-
-.right {
-  border-top-color: #f3b831;
-}
-
-.home_stats {
-  font-size: 50px;
-}
-
-.home_descriptors {
-  font-size: 30px;
 }
 
 .navbar {
@@ -281,7 +432,7 @@ h1 {
   font-weight: 500;
 }
 
-.active{
+.active {
   font-weight: 800;
   color: white !important;
 }

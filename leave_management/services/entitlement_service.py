@@ -14,14 +14,23 @@ class EntitlementCalculations:
     def mid_year_reduction(self, user, entitlement):
         start_date = user.profile.start_date
         current_year = date.today().year
+
         if start_date.year < current_year:
             return entitlement
-        else:
-            days_remaining = (date(current_year, 12, 31) - start_date).days + 1
-            portion_year_left = days_remaining/365
-            reduced_entitlement = entitlement * portion_year_left
-            return round(reduced_entitlement)
-        
+
+        # Calculate entitlement based on the portion of the year remaining (accounts for leap years)
+        year_start = date(current_year, 1, 1)
+        year_end = date(current_year, 12, 31)
+
+        days_in_year = (year_end - year_start).days + 1
+        days_remaining = (year_end - start_date).days + 1
+
+        portion_year_left = days_remaining / days_in_year
+
+        reduced_entitlement = entitlement * portion_year_left
+
+        return round(reduced_entitlement)       
+    
 #This function calculates the entitlment for part time employees based on the number of working days per week
     def pt_reduction(self, user, entitlement):
         working_days = user.profile.working_days
@@ -41,10 +50,19 @@ class EntitlementCalculations:
 #This ensures all users have an entitlment record for the current year, if not it creates one based on the calcualted entitlement value.
     def check_entitlement_record(self, user):
         current_year = date.today().year
-        record = Entitlement.objects.filter(user=user, holiday_year = current_year).first()
+
+        record = Entitlement.objects.filter(
+            user=user,
+            holiday_year=current_year
+        ).first()
+
         if record:
             return record
-        else:
-            calculated_entitlement = self.calculate_entitlement(user)
-            new_record = Entitlement.objects.create(user=user, holiday_year=current_year, total_entitlement=calculated_entitlement)
 
+        calculated_entitlement = self.calculate_entitlement(user)
+
+        return Entitlement.objects.create(
+            user=user,
+            holiday_year=current_year,
+            total_entitlement=calculated_entitlement
+    )

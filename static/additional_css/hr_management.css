@@ -1,0 +1,388 @@
+@layer components {
+  /* ==================================================
+     Page header
+  ================================================== */
+
+  .hr-page-header {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin-bottom: 26px;
+    text-align: center;
+  }
+
+  .hr-page-header h1 {
+    position: relative;
+    margin: 0;
+    padding: 0 20px 14px;
+    color: #1f2937;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 500;
+    line-height: 1.2;
+  }
+
+  .hr-page-header h1::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    width: 80%;
+    height: 4px;
+    border-radius: 10px;
+    background-color: #2563eb;
+    transform: translateX(-50%);
+  }
+
+  /* ==================================================
+     Main collapsible container
+  ================================================== */
+
+  .dashboard-collapsible {
+    width: 100%;
+    overflow: hidden;
+    border-radius: 14px;
+    background-color: transparent;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+    margin-bottom: 20px;
+  }
+
+  /* ==================================================
+     Collapsible header button
+  ================================================== */
+
+  .dashboard-header {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-height: 125px;
+    margin: 0;
+    padding: 22px 70px;
+    border: none;
+    border-radius: 14px;
+    background-color: rgb(131, 141, 235);
+    color: #ffffff;
+    font-family: inherit;
+    text-align: center;
+    cursor: pointer;
+    transition:
+      background-color 0.2s ease,
+      border-radius 0.3s ease;
+  }
+
+  .dashboard-header:hover {
+    background-color: rgb(115, 126, 228);
+  }
+
+  .dashboard-header:focus-visible {
+    outline: 4px solid rgba(37, 99, 235, 0.4);
+    outline-offset: 3px;
+  }
+
+  .dashboard-header[aria-expanded="true"] {
+    border-radius: 14px 14px 0 0;
+  }
+
+  .dashboard-header-text {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+  }
+
+  .dashboard-header-title {
+    display: block;
+    margin: 0;
+    font-size: 2rem;
+    font-weight: 600;
+    line-height: 1.2;
+  }
+
+  .dashboard-header-description {
+    display: block;
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+  }
+
+  /* ==================================================
+     Arrow
+  ================================================== */
+
+  .dashboard-arrow {
+    position: absolute;
+    top: 50%;
+    right: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    font-size: 0.9rem;
+    line-height: 1;
+    pointer-events: none;
+    transform: translateY(-50%);
+    transform-origin: center;
+    transition: transform 0.3s ease;
+  }
+
+  .dashboard-header[aria-expanded="true"] .dashboard-arrow {
+    transform: translateY(-50%) rotate(180deg);
+  }
+
+  /* ==================================================
+     Animated collapsible content
+  ================================================== */
+
+  .dashboard-collapsible-content {
+    height: 0;
+    overflow: hidden;
+    visibility: hidden;
+    opacity: 0;
+    transform: translateY(-12px);
+    transition:
+      height 0.4s ease,
+      opacity 0.3s ease,
+      transform 0.4s ease,
+      visibility 0s linear 0.4s;
+  }
+
+  .dashboard-header[aria-expanded="true"] + .dashboard-collapsible-content {
+    visibility: visible;
+    opacity: 1;
+    transform: translateY(0);
+    transition:
+      height 0.4s ease,
+      opacity 0.3s ease 0.05s,
+      transform 0.4s ease,
+      visibility 0s linear 0s;
+  }
+
+  .dashboard-content-inner {
+    padding: 20px;
+  }
+
+  /* ==================================================
+     Dashboard card grid
+  ================================================== */
+
+  .dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+    width: 100%;
+  }
+
+  /*
+   * When there is an odd number of cards, centre the
+   * final card instead of leaving it on the left side.
+   */
+  .dashboard-grid .dashboard-option:last-child:nth-child(odd) {
+    grid-column: 1 / -1;
+    width: calc(50% - 10px);
+    justify-self: center;
+  }
+
+  /* ==================================================
+     Dashboard navigation cards
+  ================================================== */
+
+  .dashboard-option {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+    min-width: 0;
+    min-height: 145px;
+    margin: 0;
+    padding: 20px;
+    border: 2px solid transparent;
+    border-radius: 14px;
+    background-color: #3b82f6;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+    color: #ffffff !important;
+    font-family: inherit;
+    text-align: center;
+    text-decoration: none;
+
+    cursor: pointer;
+
+    transition:
+      background-color 0.2s ease,
+      transform 0.2s ease,
+      box-shadow 0.2s ease;
+  }
+
+  .dashboard-option:hover {
+    color: #ffffff;
+    text-decoration: none;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.14);
+    transform: translateY(-3px);
+  }
+
+  .dashboard-option:active {
+    transform: translateY(-1px);
+  }
+
+  .dashboard-option:focus-visible {
+    outline: 4px solid rgba(37, 99, 235, 0.35);
+    outline-offset: 3px;
+  }
+
+  /*
+   * Prevent visited navigation cards from changing
+   * to the browser's default purple link colour.
+   */
+  .dashboard-option:visited {
+    color: #ffffff;
+  }
+
+  .dashboard-option-title {
+    display: block;
+    margin: 0;
+    font-size: 1.8rem;
+    font-weight: 600;
+    line-height: 1.2;
+  }
+
+  .dashboard-option-description {
+    display: block;
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.4;
+  }
+
+  /* ==================================================
+     Card colour variants
+  ================================================== */
+
+  /* Password resets card */
+
+  #user-teal {
+    border-color: #0d9488;
+    background-color: #0d9488;
+  }
+
+  #user-teal:hover {
+    border-color: #0f766e;
+    background-color: #0f766e;
+  }
+
+  /* Create user/profile card */
+
+  #user-success {
+    border-color: #10b981;
+    background-color: #10b981;
+  }
+
+  #user-success:hover {
+    border-color: #059669;
+    background-color: #059669;
+  }
+
+  /* Modify user/profile card */
+
+  #user-warning {
+    border-color: #f59e0b;
+    background-color: #f59e0b;
+  }
+
+  #user-warning:hover {
+    border-color: #d97706;
+    background-color: #d97706;
+  }
+
+  /* Delete user/profile card */
+
+  #user-danger {
+    border-color: #dc2626;
+    background-color: #dc2626;
+  }
+
+  #user-danger:hover {
+    border-color: #b91c1c;
+    background-color: #b91c1c;
+  }
+
+  /* List existing users card */
+
+  #user-primary {
+    border-color: #3b82f6;
+    background-color: #3b82f6;
+  }
+
+  #user-primary:hover {
+    border-color: #2563eb;
+    background-color: #2563eb;
+  }
+
+  /* ==================================================
+     Tablet and mobile layouts
+  ================================================== */
+
+  @media (max-width: 768px) {
+    .hr-page-header h1 {
+      font-size: 2rem;
+    }
+
+    .dashboard-header {
+      min-height: 110px;
+      padding: 20px 55px 20px 20px;
+    }
+
+    .dashboard-header-title {
+      font-size: 1.5rem;
+    }
+
+    .dashboard-header-description {
+      font-size: 0.9rem;
+    }
+
+    .dashboard-grid {
+      grid-template-columns: 1fr;
+    }
+
+    /*
+     * Reset the centred final-card layout when the
+     * dashboard changes to a single-column layout.
+     */
+    .dashboard-grid .dashboard-option:last-child:nth-child(odd) {
+      grid-column: auto;
+      width: 100%;
+    }
+
+    .dashboard-option {
+      min-height: 135px;
+    }
+
+    .dashboard-option-title {
+      font-size: 1.5rem;
+    }
+  }
+
+  /* ==================================================
+     Reduced motion accessibility
+  ================================================== */
+
+  @media (prefers-reduced-motion: reduce) {
+    .dashboard-collapsible-content,
+    .dashboard-header,
+    .dashboard-arrow,
+    .dashboard-option {
+      transition-duration: 0.01ms;
+    }
+
+    .dashboard-option:hover,
+    .dashboard-option:active {
+      transform: none;
+    }
+  }
+}

@@ -1,7 +1,7 @@
 import calendar
 from datetime import datetime
 from leave_management.models import LeaveRequest
-from HR_management.models import TeamMembership
+from hr_management.models import TeamMembership
 from django.contrib.auth.models import User
 
 def calendar_service(request, team_calendar):

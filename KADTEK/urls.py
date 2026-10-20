@@ -22,6 +22,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', RedirectView.as_view(pattern_name="accounts:login")),
     path('accounts/', include('accounts.urls')),
-    path('HR/', include('HR_management.urls')),
+    path('HR/', include('hr_management.urls')),
     path('leave-management/', include('leave_management.urls'))
 ]

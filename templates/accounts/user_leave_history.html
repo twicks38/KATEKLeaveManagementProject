@@ -7,12 +7,12 @@
 
 </head>
 <body>
-    <div class="login-body">
-    <div class = table-wrapper>
-        <table class = leave-table>
+    <div class="whitespace-body">
+    <div class="table-wrapper">
+        <table class="leave-table">
             <thead>
                 <tr>
-                    <th colspan = "6" class = "table-title"> Leave History</th>
+                    <th colspan="6" class="table-title"> Leave History</th>
                 </tr>
                 <tr>
                     <th>Type</th>
@@ -31,15 +31,8 @@
                     <td>{{ leave.start_date }}</td>
                     <td>{{ leave.end_date }}</td>
                     <td>{{ leave.start_date|date:"Y"}}</td>
-                    <td class = "
-                        {% if leave.status == 'Approved' %}
-                            leave-approved
-                        {% elif leave.status == 'Pending' %}
-                            leave-pending
-                        {% elif leave.status == 'Rejected' %}
-                          leave-rejected
-                        {% endif %}"> {{ leave.status }}</td>
-                    <td>{{ leave.start_date|timeuntil:leave.end_date }}</td>
+                    <td class="leave-status {{ leave.status|lower }}">{{ leave.status }}</td>
+                    <td>{{ leave.total_days }} day{{ leave.total_days|pluralize }}</td>
                 </tr>
                 {% empty %}
                 <tr>

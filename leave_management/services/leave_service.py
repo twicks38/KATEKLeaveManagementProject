@@ -1,46 +1,85 @@
-from datetime import timedelta, date
+from datetime import date
 from leave_management.models import LeaveRequest, Entitlement
 from django.db import transaction
+from .util import calculate_working_days
+from .entitlement_service import EntitlementCalculations
 
 class LeaveCalculations:
+
     def calculate_days_taken(self, start_date, end_date):
-        days_taken = 0
-        current_day = start_date
-        while current_day <= end_date:
-            if current_day.weekday() <5:
-                days_taken += 1
-            current_day += timedelta(days=1)
-        return days_taken
+        return calculate_working_days(start_date, end_date)
 
-    def get_days_taken(self, user):
-        current_year = date.today().year
-        approved_leave = LeaveRequest.objects.filter(user=user, leave_type='Annual', status='Approved', start_date__year=current_year)
+    def get_days_taken(self, user, holiday_year=None):
+        if holiday_year is None:
+            holiday_year = date.today().year
+
+        year_start = date(holiday_year, 1, 1)
+        year_end = date(holiday_year, 12, 31)
+
+        approved_leave = LeaveRequest.objects.filter(
+            user=user,
+            leave_type="Annual",
+            status="Approved",
+
+            # The request must overlap this holiday year
+            start_date__lte=year_end,
+            end_date__gte=year_start
+        )
+
         total_days = 0
-        for leave in approved_leave:
-            total_days += self.calculate_days_taken(leave.start_date, leave.end_date)
-        return total_days
 
+        for leave in approved_leave:
+            # Keep only the part of the request inside this year
+            calculation_start = max(
+                leave.start_date,
+                year_start
+            )
+
+            calculation_end = min(
+                leave.end_date,
+                year_end
+            )
+
+            total_days += self.calculate_days_taken(
+                calculation_start,
+                calculation_end
+            )
+
+        return total_days
+    
     def get_remaining_leave(self, user):
         current_year = date.today().year
 
-        entitlement_record, _ = Entitlement.objects.get_or_create(
-            user=user,
-            holiday_year=current_year,
-            defaults={
-                "total_entitlement": 25,
-                "days_taken": 0
-            }
+        entitlement_calculations = EntitlementCalculations()
+
+        entitlement_record = (
+            entitlement_calculations.check_entitlement_record(user)
         )
-        remaining_leave = entitlement_record.total_entitlement - entitlement_record.days_taken
-        return remaining_leave
+
+        days_taken = self.get_days_taken(
+            user,
+            holiday_year=current_year
+        )
+
+        return (
+            entitlement_record.total_entitlement
+            - days_taken
+        )
 
     def get_pending_leave_count(self, user):
-        return LeaveRequest.objects.filter(user=user, status='Pending').count()
+        return LeaveRequest.objects.filter(
+            user=user,
+            status="Pending"
+        ).count()
 
     def get_upcoming_leave(self, user):
         today = date.today()
-        return LeaveRequest.objects.filter(user=user, start_date__gte=today).order_by('start_date')[:6]
-    
+
+        return LeaveRequest.objects.filter(
+            user=user,
+            start_date__gte=today
+        ).order_by("start_date")[:6]
+  
 class LeaveRequestService:
 
     @staticmethod

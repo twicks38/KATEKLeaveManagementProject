@@ -59,6 +59,10 @@
     font-size: clamp(2rem, 3vw, 4rem);
   }
 
+  .change-pass-header h1 {
+    font-size: clamp(2rem, 3vw, 4rem);
+  }
+
   .login-container {
     width: min(90%, 900px);
     margin: 0 auto;
@@ -272,7 +276,7 @@
   }
 
   .table-title {
-    text-align: center;
+    text-align: center !important;
     background-color: rgba(41, 83, 182, 1);
     font-size: 22px;
     color: white;
@@ -332,16 +336,19 @@
     font-weight: 600;
   }
 
+  .status-pending,
   .leave-status.pending {
     background-color: #fff3cd;
     color: #856404;
   }
 
+  .status-approved,
   .leave-status.approved {
     background-color: #d1e7dd;
     color: #0f5132;
   }
 
+  .status-rejected,
   .leave-status.rejected {
     background-color: #f8d7da;
     color: #842029;
@@ -370,7 +377,6 @@ h1 {
   font-weight: 400;
   margin-top: 20px;
   text-align: center;
-  font-size: 75px;
 }
 
 a {

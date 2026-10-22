@@ -27,7 +27,7 @@
         </a>
 
         <button
-          class="navbar-toggler"
+          class="navbar-toggler default-button"
           type="button"
           data-bs-toggle="collapse"
           data-bs-target="#navbarNav"
@@ -88,6 +88,18 @@
                 {% endif %}
                 " href="{% url 'leave_management:team_calendar' %}">
                   Team Calendar
+                </a>
+              </li>
+            {% endif %}
+
+            {% if request.user|user_type:"HR" or request.user|user_type:"HR Superuser" %}
+              <li class="nav-item">
+                <a class="nav-link
+                {% if request.resolver_match.url_name == 'hr_dashboard' %}
+                active
+                {% endif %}
+                " href="{% url 'hr_management:hr_dashboard' %}">
+                  HR Management
                 </a>
               </li>
             {% endif %}

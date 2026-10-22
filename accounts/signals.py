@@ -1,3 +1,5 @@
+from tokenize import group
+
 from django.db.models.signals import post_migrate
 from django.dispatch import receiver
 from django.contrib.auth.models import Group, Permission
@@ -16,10 +18,10 @@ def create_roles(sender, **kwargs):
             'change_teammembership',
             'delete_teammembership',
             'view_teammembership',
-            'add_userprofile',
-            'change_userprofile',
-            'delete_userprofile',
-            'view_userprofile',
+            'add_profile',
+            'change_profile',
+            'delete_profile',
+            'view_profile',
             'add_group',
             'change_group',
             'view_group',
@@ -46,7 +48,7 @@ def create_roles(sender, **kwargs):
         "Manager": [
             'view_team',
             'view_teammembership',
-            'view_userprofile',
+            'view_profile',
             'view_group',
             'view_user',
             'view_entitlement',
@@ -64,7 +66,7 @@ def create_roles(sender, **kwargs):
         "Employee": [
             'view_team',
             'view_teammembership',
-            'view_userprofile',
+            'view_profile',
             'view_group',
             'view_user',
             'view_entitlement',
@@ -88,8 +90,12 @@ def create_roles(sender, **kwargs):
 
         for perm_codename in perms:
             try:
-                perm = Permission.objects.get(codename=perm_codename) #gets the codenames for the permissions
-                group.permissions.add(perm) #adds the perimssions to the new group created
+                perms = Permission.objects.filter( #gets the codenames for the permissions
+                    codename=perm_codename
+                )
 
-            except Permission.DoesNotExist: #Ensures this doesn't error on first migration
+                for perm in perms:
+                    group.permissions.add(perm) #adds the permissions to the new group created
+
+            except (Permission.DoesNotExist, Permission.MultipleObjectsReturned): #Ensures this doesn't error on first migration
                 pass

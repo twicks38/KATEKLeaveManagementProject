@@ -1,12 +1,15 @@
 from django.shortcuts import render, redirect
-from django.http import HttpResponseForbidden, HttpResponse
-from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.models import User
+from django.http import HttpResponseForbidden
+from django.contrib.auth import (
+    authenticate, login, logout, update_session_auth_hash
+)
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from .models import UserProfile
+from hr_management.services.password_reset_service import PasswordResetService
 
-# Create your views here.
+# ==================================================
+# Login Page
+# ==================================================
 
 def login_page(request):
     if request.user.is_authenticated:
@@ -16,7 +19,7 @@ def login_page(request):
 
 #stub first login data
 def is_first_login(user):
-        return False
+        return user.profile.first_login
 
 def authenticate_user(request):
     if request.method == 'POST':
@@ -35,6 +38,10 @@ def authenticate_user(request):
         return redirect('accounts:login')
 
     return HttpResponseForbidden("Invalid request method")
+
+# ==================================================
+# User Change Pass / Logout
+# ==================================================
 
 @login_required
 def change_password(request):
@@ -56,6 +63,18 @@ def change_password(request):
         user.set_password(new_password)
         user.save()
 
+        user.profile.first_login = False
+        user.profile.save(
+            update_fields=["first_login"]
+        )
+
+        update_session_auth_hash(request, user)
+
+        messages.success(
+            request,
+            "Your password has been changed successfully."
+        )
+
         return redirect('leave_management:home')
 
     return render(request, 'accounts/change_password.html')
@@ -65,6 +84,10 @@ def user_logout(request):
     logout(request)
     return redirect('accounts:login')
 
+# ==================================================
+# Password Reset
+# ==================================================
+
 def forgot_password(request):
     return render(request, 'accounts/forgot_password.html')
 
@@ -72,7 +95,10 @@ def pass_reset_req(request):
     if request.method == "POST":
         username = request.POST.get("username")
 
-        # Password-reset processing will go here.
+        PasswordResetService.create_reset_request(
+            username
+        )
+
         messages.success(
             request,
             "If the username exists, a password reset request has been submitted."

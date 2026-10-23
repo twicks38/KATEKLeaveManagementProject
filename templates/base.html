@@ -38,6 +38,7 @@
           <span class="navbar-toggler-icon"></span>
         </button>
 
+        {% if not request.user.profile.first_login %}
         <div class="collapse navbar-collapse" id="navbarNav">
           <ul class="navbar-nav w-100">
             <li class="nav-item">
@@ -79,6 +80,7 @@
                 Request Leave
               </a>
             </li>
+            {% endif %}
 
             {% if request.user|user_type:"Manager" %}
               <li class="nav-item">

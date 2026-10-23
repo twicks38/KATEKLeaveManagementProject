@@ -3,8 +3,8 @@ from .models import Team, TeamMembership
 
 @admin.register(Team)
 class TeamAdmin(admin.ModelAdmin):
-    list_display = ("id", "name")
-    search_fields = ("name",)
+    list_display = ("id", "name", "manager")
+    search_fields = ("name", "manager_user_username")
     ordering = ("name",)
 
 

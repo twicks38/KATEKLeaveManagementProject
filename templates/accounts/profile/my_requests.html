@@ -1,0 +1,162 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+My Requests
+{% endblock %}
+
+
+{% block extra_css %}
+<link
+    rel="stylesheet"
+    href="{% static 'additional_css/profile.css' %}"
+>
+{% endblock %}
+
+{% block sub_navigation %}
+
+<div class="profile-nav-container">
+    {% include 'accounts/profile/profile_nav.html' %}
+</div>
+
+{% endblock %}
+
+{% block content %}
+
+<div class="whitespace-body">
+
+    <!-- ==================================================
+         Page header
+    ================================================== -->
+
+    <div class="profile-page-header">
+        <h1>My Requests</h1>
+        <p>
+            View requests you have submitted and check
+            their current status.
+        </p>
+    </div>
+
+    <!-- ==================================================
+         Request summary
+    ================================================== -->
+
+    <div class="requests-overview-grid">
+
+        <!-- Leave requests -->
+        <section class="request-summary-card request-leave">
+            <span class="request-summary-value">
+                {{ leave_requests|length }}
+            </span>
+
+            <span class="request-summary-label">
+                Leave Requests
+            </span>
+
+            <a
+                href="{% url 'leave_management:leave_history' %}"
+                class="requests-view-link">
+                View Full Leave History Here
+            </a>
+        </section>
+
+        <!-- Password reset requests -->
+        <section class="request-summary-card request-password">
+            <span class="request-summary-value">
+                {{ password_reset_requests|length }}
+            </span>
+
+            <span class="request-summary-label">
+                Password Reset Requests
+            </span>
+        </section>
+
+    </div>
+
+
+    <!-- ==================================================
+         Password reset requests
+    ================================================== -->
+
+    <section class="requests-section">
+        <div class="requests-section-header">
+            <div>
+                <h2>Password Reset Requests</h2>
+                <p>
+                    Previous password reset requests submitted
+                    to HR.
+                </p>
+            </div>
+        </div>
+
+        {% if password_reset_requests %}
+
+            <div class="profile-table-wrapper">
+                <table class="profile-requests-table">
+                    <thead>
+                        <tr>
+                            <th>Requested</th>
+                            <th>Status</th>
+                            <th>Processed</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {% for password_request in password_reset_requests %}
+
+                            <tr>
+                                <td>
+                                    {{ password_request.requested_at|date:"d/m/Y H:i" }}
+                                </td>
+                                <td>
+                                    <span
+                                        class="request-status
+                                        request-status-{{ password_request.status|lower }}">
+                                        {{ password_request.status }}
+                                    </span>
+                                </td>
+                                <td>
+                                    {% if password_request.processed_at %}
+
+                                        {{ password_request.processed_at|date:"d/m/Y H:i" }}
+
+                                    {% else %}
+
+                                        Awaiting review
+
+                                    {% endif %}
+                                </td>
+                            </tr>
+
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+        {% else %}
+
+            <div class="profile-empty-detail">
+                <p>
+                    You haven't submitted any password reset requests.
+                </p>
+            </div>
+
+        {% endif %}
+    </section>
+
+    <!-- ==================================================
+         Personal detail requests
+    ================================================== -->
+
+    <section class="future-requests-panel">
+        <div>
+            <h2>Personal Detail Requests</h2>
+            <p>
+                Requests to change personal information will
+                appear here once that feature is available.
+            </p>
+        </div>
+    </section>
+</div>
+
+{% endblock %}

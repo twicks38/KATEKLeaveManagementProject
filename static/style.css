@@ -115,17 +115,17 @@
 
   .left {
     border-top-color: #355db9;
-    background-color: #a5b9e3;
+    background-color: #e7ebf5;
   }
 
   .center {
     border-top-color: #20c75b;
-    background-color: #9be2b6;
+    background-color: #e3f3e9;
   }
 
   .right {
     border-top-color: #f3b831;
-    background-color: #fbe0a2;
+    background-color: #fcf7ea;
   }
 }
 
@@ -277,9 +277,10 @@
 
   .table-title {
     text-align: center !important;
-    background-color: rgba(41, 83, 182, 1);
+    border-top: 6px solid #2563eb !important;
+    border-bottom: 1px solid #6b6b6b !important;
     font-size: 22px;
-    color: white;
+    color: #2563eb;
   }
 
   .leave-table th {

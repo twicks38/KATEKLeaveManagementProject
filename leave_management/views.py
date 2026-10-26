@@ -1,3 +1,5 @@
+from datetime import date
+
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
@@ -6,9 +8,8 @@ from leave_management.forms.leave_forms import LeaveRequestForm
 from leave_management.services.leave_service import LeaveCalculations, LeaveRequestService
 from leave_management.services.calendar_service import calendar_service
 from leave_management.models import LeaveRequest
-from datetime import date
 
-# Create your views here.
+
 @login_required
 def home(request):
     user = request.user

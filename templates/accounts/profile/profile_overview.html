@@ -1,0 +1,162 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+My Profile
+{% endblock %}
+
+
+{% block sub_navigation %}
+
+<div class="profile-nav-container">
+    {% include 'accounts/profile/profile_nav.html' %}
+</div>
+
+{% endblock %}
+
+
+{% block content %}
+
+<div class="whitespace-body">
+    <div class="profile-page-header">
+        <h1>My Profile</h1>
+        <p>
+            View your personal information, employment details,
+            leave entitlement and account settings.
+        </p>
+    </div>
+
+    <div class="profile-overview-grid">
+        <!-- ==================================================
+             Personal details
+        ================================================== -->
+        <section class="profile-card">
+            <h2>Personal Details</h2>
+            <div class="profile-details">
+                <div class="profile-detail-row">
+                    <span class="profile-detail-label">
+                        Name
+                    </span>
+                    <span>
+                        {{ user.first_name }}
+                        {{ user.last_name }}
+                    </span>
+                </div>
+
+                <div class="profile-detail-row">
+                    <span class="profile-detail-label">
+                        Username
+                    </span>
+                    <span>
+                        {{ user.username }}
+                    </span>
+                </div>
+
+                <div class="profile-detail-row">
+                    <span class="profile-detail-label">
+                        Email
+                    </span>
+                    <span>
+                        {% if user.email %}
+                            {{ user.email }}
+                        {% else %}
+                            Not provided
+                        {% endif %}
+                    </span>
+                </div>
+            </div>
+
+            <a
+                href="{% url 'accounts:personal_details' %}"
+                class="profile-card-link">
+                View Personal Details
+            </a>
+        </section>
+
+        <!-- ==================================================
+             Employment details
+        ================================================== -->
+
+        <section class="profile-card">
+            <h2>Employment</h2>
+            <div class="profile-details">
+                <div class="profile-detail-row">
+                    <span class="profile-detail-label">
+                        Job Title
+                    </span>
+                    <span>
+                        {{ profile.job_title }}
+                    </span>
+                </div>
+
+                <div class="profile-detail-row">
+                    <span class="profile-detail-label">
+                        Start Date
+                    </span>
+                    <span>
+                        {{ profile.start_date|date:"d/m/Y" }}
+                    </span>
+                </div>
+
+                <div class="profile-detail-row">
+                    <span class="profile-detail-label">
+                        Working Days
+                    </span>
+                    <span>
+                        {{ profile.working_days }}
+                        days per week
+                    </span>
+                </div>
+            </div>
+
+            <a
+                href="{% url 'accounts:employment_details' %}"
+                class="profile-card-link">
+                View Employment Details
+            </a>
+        </section>
+
+        <!-- ==================================================
+             Leave entitlement
+        ================================================== -->
+        <section class="profile-card">
+            <h2>Leave</h2>
+            <div class="profile-details">
+                <div class="profile-detail-row">
+                    <span class="profile-detail-label">
+                        Entitlement
+                    </span>
+                    <span>
+                        {{ total_entitlement }} days
+                    </span>
+                </div>
+
+                <div class="profile-detail-row">
+                    <span class="profile-detail-label">
+                        Days Taken
+                    </span>
+                    <span>
+                        {{ days_taken }} days
+                    </span>
+                </div>
+
+                <div class="profile-detail-row">
+                    <span class="profile-detail-label">
+                        Remaining
+                    </span>
+                    <span>
+                        {{ remaining_leave }} days
+                    </span>
+                </div>
+            </div>
+
+            <a
+                href="{% url 'accounts:leave_details' %}"
+                class="profile-card-link">
+                View Leave Details
+            </a>
+        </section>
+    </div>
+</div>
+
+{% endblock %}

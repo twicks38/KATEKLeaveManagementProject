@@ -1,0 +1,15 @@
+<section class="employment-information-panel">
+    <div>
+        <h2>Need something changed?</h2>
+        <p>
+            {{ title }} are managed by HR.
+            If any of these details need updating, submit a change request
+            for HR to review.
+        </p>
+        <a
+            href="{% url 'accounts:request_profile_change' %}"
+            class="profile-card-link mt-3">
+            Request a Change
+        </a>
+    </div>
+</section>

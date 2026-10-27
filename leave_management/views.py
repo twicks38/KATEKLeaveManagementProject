@@ -1,5 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
+from hr_management.models import TeamMembership
 from django.contrib import messages
 from django.http import HttpResponseForbidden
 from leave_management.forms.leave_forms import LeaveRequestForm
@@ -102,6 +104,14 @@ def personal_calendar(request):
     context = calendar_service(request, False) #passes false for individual calendar
     return render(request, 'leave_management/calendar_page.html', context)
 
+@login_required
+def manager_dashboard(request):
+    #Filterinng to prevent non managers accessing
+    if not request.user.groups.filter(name="Manager").exists():
+        return HttpResponseForbidden()
+
+    return render(request, 'leave_management/manager_dashboard.html')
+
 
 @login_required
 def team_calendar(request):
@@ -112,3 +122,42 @@ def team_calendar(request):
 
     context = calendar_service(request, True) #passes true to confirm a team calendar
     return render(request, 'leave_management/calendar_page.html', context)
+
+
+
+def approve_leave(request):
+    if not request.user.groups.filter(name="Manager").exists():
+        return HttpResponseForbidden()
+
+    team_leave = []
+    #gets the team ID of the manager logged in
+    team_id = TeamMembership.objects.get(
+        user = request.user,
+        role__name = "Manager",
+        active=True
+    ).team
+
+    #Gets the employees apart of the same team as the manager
+    employees = User.objects.filter(
+        teammembership__team=team_id,
+        teammembership__active = True
+    ).distinct()
+
+     
+    for employee in employees: #Loops through each employee and gets leave records
+        user_request = LeaveRequest.objects.filter(
+            user=employee,
+            status__in = ["Pending"],
+        ).order_by("start_date")
+
+        #Adds records to list
+        team_leave.extend(user_request)
+    
+    return render(request, 'leave_management/approval_page.html', {"team_leave":team_leave})
+
+
+def manage_leave_request(request, leave_id):
+    if not request.user.groups.filter(name="Manager").exists():
+        return HttpResponseForbidden()
+
+    return render(request, 'leave_managament/manage_leave_request.html')

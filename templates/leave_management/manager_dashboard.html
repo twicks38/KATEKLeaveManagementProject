@@ -1,0 +1,262 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load group_tags %}
+
+{% block title %}
+HR Management Dashboard
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'additional_css/hr_management.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<div class="whitespace-body">
+
+    <div class="hr-page-header">
+        <h1>HR Management Dashboard</h1>
+    </div>
+
+    <!-- SUPERUSER SECTION-->
+    {% if request.user|user_type:"HR Superuser" %}
+    <!-- USER MANAGEMENT -->
+    <section class="dashboard-collapsible">
+
+        <button
+            type="button"
+            class="dashboard-header"
+            id="user-administration-toggle"
+            aria-expanded="false"
+            aria-controls="user-administration-content"
+        >
+            <span class="dashboard-header-text">
+
+                <span class="dashboard-header-title">
+                    User Administration
+                </span>
+
+                <span class="dashboard-header-description">
+                    Create, manage and disable user accounts,
+                    and process password reset requests.
+                </span>
+
+            </span>
+
+            <span class="dashboard-arrow" aria-hidden="true">
+                ▼
+            </span>
+        </button>
+
+        <div
+            class="dashboard-collapsible-content"
+            id="user-administration-content"
+            aria-labelledby="user-administration-toggle"
+        >
+
+            <div class="dashboard-content-inner">
+
+                <div class="dashboard-grid">
+
+                    <a href="{% url 'hr_management:password_reset_requests' %}" class="dashboard-option" id="user-teal">
+                        <span class="dashboard-option-title">
+                            Password Resets
+                        </span>
+
+                        <span class="dashboard-option-description">
+                            List all existing password reset requests.
+                        </span>
+                    </a>
+
+                    <a href="#" class="dashboard-option" id="user-success">
+                        <span class="dashboard-option-title">
+                            Create New User/Profile
+                        </span>
+
+                        <span class="dashboard-option-description">
+                            Create a new user or user profile.
+                        </span>
+                    </a>
+
+                    <a href="#" class="dashboard-option" id="user-warning">
+                        <span class="dashboard-option-title">
+                            Modify Existing User/Profile
+                        </span>
+
+                        <span class="dashboard-option-description">
+                            Modify an existing user or user profile.
+                        </span>
+                    </a>
+
+                    <a href="#" class="dashboard-option" id="user-danger">
+                        <span class="dashboard-option-title">
+                            Delete Existing User/Profile
+                        </span>
+
+                        <span class="dashboard-option-description">
+                            Delete an existing user or user profile.
+                        </span>
+                    </a>
+
+                    <a href="#" class="dashboard-option" id="user-primary">
+                        <span class="dashboard-option-title">
+                            List Existing Users
+                        </span>
+
+                        <span class="dashboard-option-description">
+                            Displays a table list of existing users.
+                        </span>
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+    {% endif %}
+
+    <!-- HR SECTION -->
+    <!-- PLACEHOLDER -->
+    <section class="dashboard-collapsible">
+
+        <button
+            type="button"
+            class="dashboard-header"
+            id="user-administration-toggle"
+            aria-expanded="false"
+            aria-controls="user-administration-content"
+        >
+            <span class="dashboard-header-text">
+
+                <span class="dashboard-header-title">
+                    Team Actions
+                </span>
+
+
+            </span>
+
+            <span class="dashboard-arrow" aria-hidden="true">
+                ▼
+            </span>
+        </button>
+
+        <div
+            class="dashboard-collapsible-content"
+            id="placeholder-content"
+            aria-labelledby="placeholder-toggle"
+        >
+
+            <div class="dashboard-content-inner">
+
+                <div class="dashboard-grid">
+
+                    <a href="{% url 'leave_management:team_calendar' %}" class="dashboard-option" id="user-teal">
+                        <span class="dashboard-option-title">
+                            Team Calendar
+                        </span>
+                    </a>
+
+                    <a href="{% url 'leave_management:approve_leave' %}" class="dashboard-option" id="user-success">
+                        <span class="dashboard-option-title">
+                            Approve Leave
+                        </span>
+                    </a>
+
+                    <a href="#" class="dashboard-option" id="user-warning">
+                        <span class="dashboard-option-title">
+                            Manage Leave
+                        </span>
+                    </a>
+
+                    <a href="#" class="dashboard-option" id="user-danger">
+                        <span class="dashboard-option-title">
+                            Manager Reports
+                        </span>
+
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    document
+        .querySelectorAll(".dashboard-collapsible")
+        .forEach(function (collapsible) {
+
+            const toggleButton =
+                collapsible.querySelector(".dashboard-header");
+
+            const content =
+                collapsible.querySelector(
+                    ".dashboard-collapsible-content"
+                );
+
+            toggleButton.addEventListener("click", function () {
+
+                const isOpen =
+                    toggleButton.getAttribute("aria-expanded") === "true";
+
+                if (isOpen) {
+                    closeCollapsible();
+                } else {
+                    openCollapsible();
+                }
+            });
+
+            function openCollapsible() {
+
+                toggleButton.setAttribute(
+                    "aria-expanded",
+                    "true"
+                );
+
+                content.style.height =
+                    content.scrollHeight + "px";
+
+                content.addEventListener(
+                    "transitionend",
+                    function handler(event) {
+
+                        if (event.propertyName !== "height") {
+                            return;
+                        }
+
+                        content.style.height = "auto";
+
+                        content.removeEventListener(
+                            "transitionend",
+                            handler
+                        );
+                    }
+                );
+            }
+
+            function closeCollapsible() {
+
+                content.style.height =
+                    content.scrollHeight + "px";
+
+                content.offsetHeight;
+
+                toggleButton.setAttribute(
+                    "aria-expanded",
+                    "false"
+                );
+
+                content.style.height = "0px";
+            }
+        });
+});
+</script>
+{% endblock %}

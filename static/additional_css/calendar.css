@@ -218,6 +218,21 @@
   color: #b45309;
 }
 
+.leave-viewing-request{
+  background: #b5dbfe;
+}
+
 .name > strong {
   color: black !important;
+}
+
+.leave-arrow {
+    font-size: 14px;
+    font-weight: bold;
+}
+
+
+.leave-arrow.next {
+    position: absolute;
+    right: 5px;
 }

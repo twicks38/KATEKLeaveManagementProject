@@ -80,6 +80,9 @@
                                 style="--start-column: {{ segment.start_column }};
                                 --span: {{segment.span }};
                                 --lane: {{segment.lane}}; ">
+                                {% if segment.continues_into_previous_month %}
+                                    <span class="leave-arrow previous">&#8592; Previous Month</span>
+                                {% endif %}
                                 {% if team_calendar %}
                                     <span class="name">
                                         {% if segment.leave_request.user == request.user %}
@@ -97,6 +100,10 @@
                                 <span>
                                     {{ segment.leave_request.get_status_display}}
                                 </span>
+
+                                {% if segment.continues_into_next_month %}
+                                    <span class="leave-arrow next">Next Month &#8594;</span>
+                                {% endif %}
                             </div>
                         {% endfor %}
                     </div>

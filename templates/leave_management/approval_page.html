@@ -28,7 +28,11 @@
                     <td>{{ leave.start_date }}</td>
                     <td>{{ leave.end_date }}</td>
                     <td>{{ leave.total_days }} day{{ leave.total_days|pluralize }}</td>
-                    <td><a href="{% url 'leave_management:manage_leave_request' leave.id}"><button class="approval-button">View Request</button></a></td>
+                    <td>
+                        <a href="{% url 'leave_management:manage_leave_request' leave.id %}">
+                            <button class="approval-button">View Request</button>
+                        </a>
+                    </td>
                 </tr>
                 {% empty %}
                 <tr>

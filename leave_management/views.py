@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from hr_management.models import TeamMembership
@@ -101,7 +101,7 @@ def leave_request_form(request):
 
 @login_required
 def personal_calendar(request):
-    context = calendar_service(request, False) #passes false for individual calendar
+    context = calendar_service(request, False, None) #passes false for individual calendar
     return render(request, 'leave_management/calendar_page.html', context)
 
 @login_required
@@ -124,40 +124,76 @@ def team_calendar(request):
     return render(request, 'leave_management/calendar_page.html', context)
 
 
-
+@login_required
 def approve_leave(request):
     if not request.user.groups.filter(name="Manager").exists():
         return HttpResponseForbidden()
 
-    team_leave = []
-    #gets the team ID of the manager logged in
-    team_id = TeamMembership.objects.get(
+    team = TeamMembership.objects.get(
         user = request.user,
-        role__name = "Manager",
-        active=True
+        role__name="Manager",
+        active = True
     ).team
 
-    #Gets the employees apart of the same team as the manager
     employees = User.objects.filter(
-        teammembership__team=team_id,
+        teammembership__team=team,
         teammembership__active = True
-    ).distinct()
+    )
 
-     
-    for employee in employees: #Loops through each employee and gets leave records
-        user_request = LeaveRequest.objects.filter(
-            user=employee,
-            status__in = ["Pending"],
-        ).order_by("start_date")
+    team_leave = LeaveRequest.objects.filter(
+        user__in=employees,
+        status="Pending"
+    ).exclude(user=request.user).order_by("start_date")
 
-        #Adds records to list
-        team_leave.extend(user_request)
-    
+
     return render(request, 'leave_management/approval_page.html', {"team_leave":team_leave})
 
 
+@login_required
 def manage_leave_request(request, leave_id):
     if not request.user.groups.filter(name="Manager").exists():
         return HttpResponseForbidden()
 
-    return render(request, 'leave_managament/manage_leave_request.html')
+    leave_request = get_object_or_404(LeaveRequest, id=leave_id)
+    if leave_request.user == request.user:
+        return HttpResponseForbidden()
+    
+    context = calendar_service(request, True, leave_request)
+    context["leave_request"] = leave_request
+
+
+    return render(request, 'leave_management/manage_leave_request.html', context)
+
+@login_required
+def approve_leave_request(request, leave_id):
+    if not request.user.groups.filter(name="Manager").exists():
+        return HttpResponseForbidden()
+
+    leave_request = get_object_or_404(LeaveRequest, id=leave_id)
+
+    if leave_request.user == request.user:
+        return HttpResponseForbidden()
+    
+    leave_request.status = "Approved"
+    leave_request.approved_by = request.user
+
+    leave_request.save(update_fields=["status", "approved_by"])
+
+    return redirect("leave_management:approve_leave")
+
+
+@login_required
+def reject_leave_request(request, leave_id):
+    if not request.user.groups.filter(name="Manager").exists():
+        return HttpResponseForbidden()
+
+    leave_request = get_object_or_404(LeaveRequest, id=leave_id)
+    if leave_request.user == request.user:
+        return HttpResponseForbidden()
+    
+    leave_request.status = "Rejected"
+    leave_request.approved_by = request.user
+
+    leave_request.save(update_fields=["status", "approved_by"])
+
+    return redirect("leave_management:approve_leave")

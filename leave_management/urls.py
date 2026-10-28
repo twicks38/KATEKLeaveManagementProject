@@ -11,5 +11,7 @@ urlpatterns = [
     path('team-calendar/', views.team_calendar, name="team_calendar"),
     path('manager-dashboard/', views.manager_dashboard, name="manager_dashboard"),
     path('approve-leave/', views.approve_leave, name="approve_leave"),
-    path('manage-leave-request/<int:leave_id>/', views.manage_leave_request, name="manage_leave_request")
+    path('manage-leave-request/<int:leave_id>/', views.manage_leave_request, name="manage_leave_request"),
+    path('manage-leave-request/<int:leave_id>/approved/', views.approve_leave_request, name="approve_leave_request"),
+    path('manage-leave-request/<int:leave_id>/rejected/', views.reject_leave_request, name="reject_leave_request")
 ]

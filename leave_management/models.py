@@ -46,6 +46,17 @@ class LeaveRequest (models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     approved_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name="approved_leave_requests")
+    approved_at = models.DateTimeField(null=True, blank=True)
+
+    rejected_by = models.ForeignKey(
+    User,
+    on_delete=models.SET_NULL,
+    null=True,
+    blank=True,
+    related_name="rejected_leave_requests"
+    )
+    rejected_at = models.DateTimeField(null=True, blank=True)
+    rejection_reason = models.TextField(null=True, blank=True)
 
     def __str__(self):
         return f"{self.user.username} - {self.leave_type} ({self.start_date} to {self.end_date})"

@@ -1,0 +1,271 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+Request Profile Change
+{% endblock %}
+
+{% block extra_css %}
+<link
+  rel="stylesheet"
+  href="{% static 'additional_css/profile.css' %}"
+>
+{% endblock %}
+
+{% block sub_navigation %}
+<div class="profile-nav-container">
+  {% include 'accounts/profile/profile_nav.html' %}
+</div>
+{% endblock %}
+
+{% block content %}
+
+<div class="whitespace-body">
+
+  <!-- ==================================================
+       Page header
+  ================================================== -->
+
+  <div class="profile-page-header">
+    <h1>Request a Profile Change</h1>
+
+    <p>
+      Submit a request to change your name or team.
+      Your current details will remain unchanged until
+      the request has been reviewed by HR.
+    </p>
+  </div>
+
+  <!-- ==================================================
+       Profile change request form
+  ================================================== -->
+
+  <div class="profile-change-form-wrapper">
+
+    <form method="post" class="profile-change-form">
+      {% csrf_token %}
+
+      <!-- ==================================================
+           Form errors
+      ================================================== -->
+
+      {% if form.non_field_errors %}
+        <div class="profile-form-errors">
+          {% for error in form.non_field_errors %}
+            <p>{{ error }}</p>
+          {% endfor %}
+        </div>
+      {% endif %}
+
+      <!-- ==================================================
+           Change type
+      ================================================== -->
+
+      <div class="profile-form-group">
+        <label for="{{ form.change_type.id_for_label }}">
+          {{ form.change_type.label }}
+        </label>
+
+        {{ form.change_type }}
+
+        {% if form.change_type.errors %}
+          <div class="profile-field-errors">
+            {% for error in form.change_type.errors %}
+              <p>{{ error }}</p>
+            {% endfor %}
+          </div>
+        {% endif %}
+      </div>
+
+      <!-- ==================================================
+           Name change
+      ================================================== -->
+
+      <div
+        id="name-change-fields"
+        class="profile-change-fields"
+        hidden
+      >
+        <div class="profile-change-section-header">
+          <h2>Name Change</h2>
+
+          <p>
+            Enter the name you would like HR to update
+            your profile to.
+          </p>
+        </div>
+
+        <div class="current-details-panel">
+          <span class="current-details-label">
+            Current Name
+          </span>
+
+          <span class="current-details-value">
+            {% if request.user.first_name or request.user.last_name %}
+              {{ request.user.first_name }}
+              {{ request.user.last_name }}
+            {% else %}
+              Not provided
+            {% endif %}
+          </span>
+        </div>
+
+        <div class="profile-form-row">
+
+          <div class="profile-form-group">
+            <label for="{{ form.requested_first_name.id_for_label }}">
+              {{ form.requested_first_name.label }}
+            </label>
+
+            {{ form.requested_first_name }}
+
+            {% if form.requested_first_name.errors %}
+              <div class="profile-field-errors">
+                {% for error in form.requested_first_name.errors %}
+                  <p>{{ error }}</p>
+                {% endfor %}
+              </div>
+            {% endif %}
+          </div>
+
+          <div class="profile-form-group">
+            <label for="{{ form.requested_last_name.id_for_label }}">
+              {{ form.requested_last_name.label }}
+            </label>
+
+            {{ form.requested_last_name }}
+
+            {% if form.requested_last_name.errors %}
+              <div class="profile-field-errors">
+                {% for error in form.requested_last_name.errors %}
+                  <p>{{ error }}</p>
+                {% endfor %}
+              </div>
+            {% endif %}
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ==================================================
+           Team change
+      ================================================== -->
+
+      <div
+        id="team-change-fields"
+        class="profile-change-fields"
+        hidden
+      >
+        <div class="profile-change-section-header">
+          <h2>Team Change</h2>
+
+          <p>
+            Select the team you would like to request
+            to move to.
+          </p>
+        </div>
+
+        <div class="current-details-panel">
+          <span class="current-details-label">
+            Current Team
+          </span>
+
+          <span class="current-details-value">
+            {% if current_team %}
+              {{ current_team.name }}
+            {% else %}
+              Not currently assigned
+            {% endif %}
+          </span>
+        </div>
+
+        <div class="profile-form-group">
+          <label for="{{ form.requested_team.id_for_label }}">
+            {{ form.requested_team.label }}
+          </label>
+
+          {{ form.requested_team }}
+
+          {% if form.requested_team.errors %}
+            <div class="profile-field-errors">
+              {% for error in form.requested_team.errors %}
+                <p>{{ error }}</p>
+              {% endfor %}
+            </div>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- ==================================================
+           Request information
+      ================================================== -->
+
+      <div class="profile-request-information">
+        <h2>Before submitting</h2>
+
+        <p>
+          Submitting this form will not immediately change
+          your profile. Your request will be sent to HR for
+          review and its status will appear under My Requests.
+        </p>
+      </div>
+
+      <!-- ==================================================
+           Form actions
+      ================================================== -->
+
+      <div class="profile-form-actions">
+
+        <a
+          href="{% url 'accounts:personal_details' %}"
+          class="profile-cancel-link"
+        >
+          Cancel
+        </a>
+
+        <button
+          type="submit"
+          class="profile-submit-button"
+        >
+          Submit Request
+        </button>
+
+      </div>
+
+    </form>
+
+  </div>
+
+</div>
+
+<!-- ==================================================
+     Change type display
+================================================== -->
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const changeType = document.getElementById("change_type");
+  const nameFields = document.getElementById("name-change-fields");
+  const teamFields = document.getElementById("team-change-fields");
+
+  if (!changeType || !nameFields || !teamFields) {
+    return;
+  }
+
+  function updateChangeFields() {
+    const selectedType = changeType.value;
+
+    nameFields.hidden = selectedType !== "Name";
+    teamFields.hidden = selectedType !== "Team";
+  }
+
+  updateChangeFields();
+
+  changeType.addEventListener(
+    "change",
+    updateChangeFields
+  );
+});
+</script>
+
+{% endblock %}

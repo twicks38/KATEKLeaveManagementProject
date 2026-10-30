@@ -1,0 +1,58 @@
+{% load static %}
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'additional_css/profile.css' %}">
+{% endblock %}
+
+<nav class="profile-nav">
+
+    <a
+        href="{% url 'accounts:profile' %}"
+        class="profile-nav-link
+        {% if request.resolver_match.url_name == 'profile' %}
+            active
+        {% endif %}"
+    >
+        Overview
+    </a>
+
+    <a
+        href="{% url 'accounts:personal_details' %}"
+        class="profile-nav-link
+        {% if request.resolver_match.url_name == 'personal_details' %}
+            active
+        {% endif %}"
+    >
+        Personal Details
+    </a>
+
+    <a
+        href="{% url 'accounts:employment_details' %}"
+        class="profile-nav-link
+        {% if request.resolver_match.url_name == 'employment_details' %}
+            active
+        {% endif %}"
+    >
+        Employment
+    </a>
+
+    <a
+        href="{% url 'accounts:leave_details' %}"
+        class="profile-nav-link
+        {% if request.resolver_match.url_name == 'leave_details' %}
+            active
+        {% endif %}"
+    >
+        Leave
+    </a>
+
+    <a
+        href="{% url 'accounts:profile_requests' %}"
+        class="profile-nav-link
+        {% if request.resolver_match.url_name == 'profile_requests' %}
+            active
+        {% endif %}"
+    >
+        My Requests
+    </a>
+
+</nav>

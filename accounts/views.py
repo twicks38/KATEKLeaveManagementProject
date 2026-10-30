@@ -6,6 +6,11 @@ from django.contrib.auth import (
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from hr_management.services.password_reset_service import PasswordResetService
+from accounts.services.profile_service import ProfileService
+from accounts.forms.profile_forms import ProfileChangeRequestForm
+from accounts.services.profile_request_service import (
+    ProfileRequestService,
+)
 
 # ==================================================
 # Login Page
@@ -40,7 +45,7 @@ def authenticate_user(request):
     return HttpResponseForbidden("Invalid request method")
 
 # ==================================================
-# User Change Pass / Logout
+# User Management / Logout
 # ==================================================
 
 @login_required
@@ -83,6 +88,96 @@ def change_password(request):
 def user_logout(request):
     logout(request)
     return redirect('accounts:login')
+
+# User Profile
+
+@login_required
+def profile(request):
+    return render(
+        request,
+        "accounts/profile/profile_overview.html",
+        ProfileService.get_overview(request.user),
+    )
+
+@login_required
+def personal_details(request):
+    return render(
+        request,
+        "accounts/profile/personal_details.html",
+        {"profile": request.user.profile,}
+    )
+
+
+@login_required
+def employment_details(request):
+    return render(
+        request,
+        "accounts/profile/employment_details.html",
+        ProfileService.get_employment_details(request.user),
+    )
+
+
+@login_required
+def leave_details(request):
+    return render(
+        request,
+        "accounts/profile/leave_details.html",
+        ProfileService.get_leave_details(request.user),
+    )
+
+
+@login_required
+def profile_requests(request):
+    return render(
+        request,
+        "accounts/profile/my_requests.html",
+        ProfileService.get_requests(request.user),
+    )
+
+
+# ==================================================
+# Request profile change
+# ==================================================
+
+@login_required
+def request_profile_change(request):
+    form = ProfileChangeRequestForm(
+        request.POST or None
+    )
+
+    if request.method == "POST" and form.is_valid():
+        try:
+            ProfileRequestService.create_request(
+                user=request.user,
+                cleaned_data=form.cleaned_data,
+            )
+
+            messages.success(
+                request,
+                "Your profile change request has been submitted."
+            )
+
+            return redirect(
+                "accounts:profile_requests"
+            )
+
+        except ValueError as error:
+            messages.error(
+                request,
+                str(error)
+            )
+
+    context = ProfileService.get_change_request_details(
+        request.user
+    )
+
+    context["form"] = form
+
+    return render(
+        request,
+        "accounts/profile/request_profile_change.html",
+        context,
+    )
 
 # ==================================================
 # Password Reset

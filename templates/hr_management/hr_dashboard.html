@@ -22,7 +22,6 @@ HR Management Dashboard
     {% if request.user|user_type:"HR Superuser" %}
     <!-- USER MANAGEMENT -->
     <section class="dashboard-collapsible">
-
         <button
             type="button"
             class="dashboard-header"
@@ -31,7 +30,6 @@ HR Management Dashboard
             aria-controls="user-administration-content"
         >
             <span class="dashboard-header-text">
-
                 <span class="dashboard-header-title">
                     User Administration
                 </span>
@@ -40,9 +38,7 @@ HR Management Dashboard
                     Create, manage and disable user accounts,
                     and process password reset requests.
                 </span>
-
             </span>
-
             <span class="dashboard-arrow" aria-hidden="true">
                 ▼
             </span>
@@ -53,11 +49,8 @@ HR Management Dashboard
             id="user-administration-content"
             aria-labelledby="user-administration-toggle"
         >
-
             <div class="dashboard-content-inner">
-
                 <div class="dashboard-grid">
-
                     <a href="{% url 'hr_management:password_reset_requests' %}" class="dashboard-option" id="user-teal">
                         <span class="dashboard-option-title">
                             Password Resets
@@ -107,111 +100,74 @@ HR Management Dashboard
                             Displays a table list of existing users.
                         </span>
                     </a>
-
                 </div>
-
             </div>
-
         </div>
-
     </section>
     {% endif %}
 
-    <!-- HR SECTION -->
-    <!-- PLACEHOLDER -->
-    <section class="dashboard-collapsible">
+<!-- ==================================================
+     HR SECTION
+================================================== -->
 
-        <button
-            type="button"
-            class="dashboard-header"
-            id="user-administration-toggle"
-            aria-expanded="false"
-            aria-controls="user-administration-content"
-        >
-            <span class="dashboard-header-text">
+{% if request.user|user_type:"HR" or request.user|user_type:"HR Superuser" %}
 
-                <span class="dashboard-header-title">
-                    Place Holder
-                </span>
+<!-- ==================================================
+     EMPLOYEE REQUESTS
+================================================== -->
 
-                <span class="dashboard-header-description">
-                    Lorem ipsum.
-                </span>
+<section class="dashboard-collapsible">
 
+    <button
+        type="button"
+        class="dashboard-header"
+        id="employee-requests-toggle"
+        aria-expanded="false"
+        aria-controls="employee-requests-content"
+    >
+        <span class="dashboard-header-text">
+            <span class="dashboard-header-title">
+                Employee Requests
             </span>
 
-            <span class="dashboard-arrow" aria-hidden="true">
-                ▼
+            <span class="dashboard-header-description">
+                Review and process employee profile and employment
+                change requests.
             </span>
-        </button>
+        </span>
 
-        <div
-            class="dashboard-collapsible-content"
-            id="placeholder-content"
-            aria-labelledby="placeholder-toggle"
-        >
+        <span class="dashboard-arrow" aria-hidden="true">
+            ▼
+        </span>
 
-            <div class="dashboard-content-inner">
-
-                <div class="dashboard-grid">
-
-                    <a href="#" class="dashboard-option" id="user-teal">
-                        <span class="dashboard-option-title">
-                            placeholder
-                        </span>
-
-                        <span class="dashboard-option-description">
-                            placeholder
-                        </span>
-                    </a>
-
-                    <a href="#" class="dashboard-option" id="user-success">
-                        <span class="dashboard-option-title">
-                            placeholder
-                        </span>
-
-                        <span class="dashboard-option-description">
-                            placeholder
-                        </span>
-                    </a>
-
-                    <a href="#" class="dashboard-option" id="user-warning">
-                        <span class="dashboard-option-title">
-                            placeholder
-                        </span>
-
-                        <span class="dashboard-option-description">
-                            placeholder
-                        </span>
-                    </a>
-
-                    <a href="#" class="dashboard-option" id="user-danger">
-                        <span class="dashboard-option-title">
-                            placeholder
-                        </span>
-
-                        <span class="dashboard-option-description">
-                            placeholder
-                        </span>
-                    </a>
-
-                    <a href="#" class="dashboard-option" id="user-primary">
-                        <span class="dashboard-option-title">
-                            placeholder
-                        </span>
-
-                        <span class="dashboard-option-description">
-                            placeholder
-                        </span>
-                    </a>
-
-                </div>
-
+    </button>
+    <div
+        class="dashboard-collapsible-content"
+        id="employee-requests-content"
+        aria-labelledby="employee-requests-toggle"
+    >
+        <div class="dashboard-content-inner">
+            <div class="dashboard-grid">
+                <!-- Profile change requests -->
+                <a
+                    href="{% url 'hr_management:profile_change_requests' %}"
+                    class="dashboard-option"
+                    id="request-purple"
+                >
+                    <span class="dashboard-option-title">
+                        Profile Change Requests
+                    </span>
+                    <span class="dashboard-option-description">
+                        Review and process employee name and team
+                        change requests.
+                    </span>
+                </a>
             </div>
-
         </div>
+    </div>
+</section>
 
-    </section>
+{% endif %}
 
 </div>
 
@@ -221,7 +177,6 @@ document.addEventListener("DOMContentLoaded", function () {
     document
         .querySelectorAll(".dashboard-collapsible")
         .forEach(function (collapsible) {
-
             const toggleButton =
                 collapsible.querySelector(".dashboard-header");
 
@@ -234,7 +189,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 const isOpen =
                     toggleButton.getAttribute("aria-expanded") === "true";
-
                 if (isOpen) {
                     closeCollapsible();
                 } else {
@@ -243,7 +197,6 @@ document.addEventListener("DOMContentLoaded", function () {
             });
 
             function openCollapsible() {
-
                 toggleButton.setAttribute(
                     "aria-expanded",
                     "true"
@@ -255,13 +208,10 @@ document.addEventListener("DOMContentLoaded", function () {
                 content.addEventListener(
                     "transitionend",
                     function handler(event) {
-
                         if (event.propertyName !== "height") {
                             return;
                         }
-
                         content.style.height = "auto";
-
                         content.removeEventListener(
                             "transitionend",
                             handler
@@ -271,7 +221,6 @@ document.addEventListener("DOMContentLoaded", function () {
             }
 
             function closeCollapsible() {
-
                 content.style.height =
                     content.scrollHeight + "px";
 
@@ -281,7 +230,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     "aria-expanded",
                     "false"
                 );
-
+                
                 content.style.height = "0px";
             }
         });

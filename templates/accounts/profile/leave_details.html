@@ -1,0 +1,152 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+Leave Details
+{% endblock %}
+
+
+{% block extra_css %}
+<link
+    rel="stylesheet"
+    href="{% static 'additional_css/profile.css' %}"
+>
+{% endblock %}
+
+
+{% block sub_navigation %}
+
+<div class="profile-nav-container">
+    {% include 'accounts/profile/profile_nav.html' %}
+</div>
+
+{% endblock %}
+
+{% block content %}
+
+<div class="whitespace-body">
+
+    <!-- ==================================================
+         Page header
+    ================================================== -->
+
+    <div class="profile-page-header">
+        <h1>Leave Details</h1>
+        <p>
+            View your annual leave entitlement and current
+            leave position for {{ holiday_year }}.
+        </p>
+    </div>
+
+    <!-- ==================================================
+         Leave entitlement information
+    ================================================== -->
+
+    <div class="leave-profile-grid">
+        <section class="profile-card leave-details-card">
+            <div class="profile-section-header">
+                <div>
+                    <h2>Entitlement Information</h2>
+                    <p>
+                        Information used when determining your
+                        annual leave entitlement.
+                    </p>
+                </div>
+            </div>
+
+            <div class="profile-details">
+                <div class="profile-detail-row">
+                    <span class="profile-detail-label">
+                        Holiday Year
+                    </span>
+
+                    <span>
+                        {{ holiday_year }}
+                    </span>
+                </div>
+
+                <div class="profile-detail-row">
+                    <span class="profile-detail-label">
+                        Working Pattern
+                    </span>
+
+                    <span>
+                        {% if profile.working_days %}
+                            {{ profile.working_days }}
+                            days per week
+                        {% else %}
+                            Not provided
+                        {% endif %}
+                    </span>
+                </div>
+
+                <div class="profile-detail-row">
+                    <span class="profile-detail-label">
+                        Employment Start Date
+                    </span>
+
+                    <span>
+                        {{ profile.start_date|date:"d/m/Y" }}
+                    </span>
+                </div>
+
+                <div class="profile-detail-row">
+                    <span class="profile-detail-label">
+                        Current Entitlement
+                    </span>
+                    <span>
+                        {{ total_entitlement }} days
+                    </span>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================================================
+             Leave actions
+        ================================================== -->
+
+        <section class="profile-card leave-details-card">
+            <div class="profile-section-header">
+                <div>
+                    <h2>Leave Management</h2>
+                    <p>
+                        Review previous requests or submit
+                        a new leave request.
+                    </p>
+                </div>
+            </div>
+
+            <div class="leave-profile-actions">
+                <a
+                    href="{% url 'leave_management:leave_history' %}"
+                    class="profile-card-link">
+                    View Leave History
+                </a>
+
+                <a
+                    href="{% url 'leave_management:leave_request_form' %}"
+                    class="profile-card-link leave-request-link">
+                    Request Leave
+                </a>
+            </div>
+        </section>
+    </div>
+
+    <!-- ==================================================
+         Entitlement explanation
+    ================================================== -->
+    <section class="leave-entitlement-note">
+        <h2>How is my entitlement calculated?</h2>
+        <p>
+            Your annual leave entitlement is based on your standard
+            entitlement and working pattern. If you joined during the
+            current holiday year, your entitlement is also adjusted
+            based on the portion of the holiday year remaining.
+        </p>
+    </section>
+
+{% include 'accounts/profile/profile_footer.html' with title="Leave information" %}
+
+</div>
+
+{% endblock %}

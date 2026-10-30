@@ -1,0 +1,144 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+Profile Change Requests
+{% endblock %}
+
+{% block extra_css %}
+<link
+    rel="stylesheet"
+    href="{% static 'additional_css/hr_management.css' %}"
+>
+{% endblock %}
+
+{% block content %}
+
+<div class="whitespace-body">
+
+    <!-- ==================================================
+         Page header
+    ================================================== -->
+
+    <div class="hr-page-header">
+        <h1>Profile Change Requests</h1>
+    </div>
+
+    <!-- ==================================================
+         Requests table
+    ================================================== -->
+
+    <div class="table-wrapper mt-4">
+        <table class="leave-table">
+            <thead>
+                <tr>
+                    <th colspan="6" class="table-title">
+                        Pending Requests
+                    </th>
+                </tr>
+                <tr>
+                    <th>Employee</th>
+                    <th>Change Type</th>
+                    <th>Current</th>
+                    <th>Requested</th>
+                    <th>Requested On</th>
+                    <th id="action">Actions</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for change_request in profile_change_requests %}
+
+                    <tr>
+                        <!-- Employee Username -->
+                        <td>
+                            {{ change_request.user.username }}
+                        </td>
+                        <!-- Type of change -->
+                        <td>
+                            {{ change_request.get_change_type_display }}
+                        </td>
+                        <!-- Current value -->
+                        <td>
+                            {% if change_request.change_type == "Name" %}
+
+                                {% if change_request.user.first_name or change_request.user.last_name %}
+                                    {{ change_request.user.first_name }}
+                                    {{ change_request.user.last_name }}
+                                {% else %}
+                                    Not provided
+                                {% endif %}
+
+                            {% elif change_request.change_type == "Team" %}
+
+                                Current team shown in review
+
+                            {% endif %}
+                        </td>
+                        <!-- Requested value -->
+                        <td>
+                            {% if change_request.change_type == "Name" %}
+
+                                {{ change_request.requested_first_name }}
+                                {{ change_request.requested_last_name }}
+
+                            {% elif change_request.change_type == "Team" %}
+
+                                {% if change_request.requested_team %}
+                                    {{ change_request.requested_team.name }}
+                                {% else %}
+                                    Not provided
+                                {% endif %}
+
+                            {% endif %}
+                        </td>
+                        <!-- Date request was made -->
+                        <td>
+                            {{ change_request.requested_at|date:"d/m/Y H:i" }}
+                        </td>
+                        <!-- Actions -->
+                        <td>
+                            <div class="profile-request-actions">
+                                <form
+                                    method="post"
+                                    action="{% url 'hr_management:approve_profile_change' change_request.id %}">
+
+                                    {% csrf_token %}
+                                    <button
+                                        type="submit"
+                                        class="default-button status-approved">
+                                        Approve
+                                    </button>
+                                </form>
+
+                                <form
+                                    method="post"
+                                    action="{% url 'hr_management:reject_profile_change' change_request.id %}">
+                                    {% csrf_token %}
+                                    <button
+                                        type="submit"
+                                        class="default-button status-rejected">
+                                        Reject
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+
+                {% empty %}
+
+                    <tr>
+                        <td
+                            colspan="6"
+                            class="empty-state">
+                            No pending profile change requests.
+                        </td>
+                    </tr>
+
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock %}

@@ -324,6 +324,27 @@
     background-color: #2563eb;
   }
 
+  /* Profile change requests card */
+
+  #request-purple {
+    border-color: #7c3aed;
+    background-color: #7c3aed;
+  }
+
+  #request-purple:hover {
+    border-color: #6d28d9;
+    background-color: #6d28d9;
+  }
+
+  /* ==================================================
+     IDs
+  ================================================== */
+
+  /* Table Action */
+  #action {
+    text-align: center !important;
+  }
+
   /* ==================================================
      Tablet and mobile layouts
   ================================================== */

@@ -1,0 +1,187 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+Employment Details
+{% endblock %}
+
+
+{% block extra_css %}
+<link
+    rel="stylesheet"
+    href="{% static 'additional_css/profile.css' %}"
+>
+{% endblock %}
+
+
+{% block sub_navigation %}
+
+<div class="profile-nav-container">
+    {% include 'accounts/profile/profile_nav.html' %}
+</div>
+
+{% endblock %}
+
+{% block content %}
+
+<div class="whitespace-body">
+
+    <!-- ==================================================
+         Page header
+    ================================================== -->
+
+    <div class="profile-page-header">
+        <h1>Employment Details</h1>
+        <p>
+            View your current employment, team and working
+            pattern information.
+        </p>
+    </div>
+
+
+    <!-- ==================================================
+         Employment details
+    ================================================== -->
+
+    <div class="employment-details-grid">
+
+        <!-- ==================================================
+             Employment information
+        ================================================== -->
+
+        <section class="profile-card employment-card">
+            <div class="profile-section-header">
+                <div>
+                    <h2>Employment Information</h2>
+                    <p>
+                        Your current employment information.
+                    </p>
+                </div>
+            </div>
+
+            <div class="profile-details">
+                <div class="profile-detail-row">
+                    <span class="profile-detail-label">
+                        Job Title
+                    </span>
+                    <span>
+                        {{ profile.job_title }}
+                    </span>
+                </div>
+
+                <div class="profile-detail-row">
+                    <span class="profile-detail-label">
+                        Start Date
+                    </span>
+                    <span>
+                        {{ profile.start_date|date:"d/m/Y" }}
+                    </span>
+                </div>
+
+                <div class="profile-detail-row">
+                    <span class="profile-detail-label">
+                        Working Days
+                    </span>
+                    <span>
+                        {% if profile.working_days %}
+                            {{ profile.working_days }}
+                            days per week
+                        {% else %}
+                            Not provided
+                        {% endif %}
+                    </span>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================================================
+             Team information
+        ================================================== -->
+
+        <section class="profile-card employment-card">
+            <div class="profile-section-header">
+                <div>
+                    <h2>Team Information</h2>
+                    <p>
+                        Your current team and role assignment.
+                    </p>
+                </div>
+            </div>
+
+            {% if team_membership %}
+
+                <div class="profile-details">
+                    <div class="profile-detail-row">
+                        <span class="profile-detail-label">
+                            Team
+                        </span>
+                        <span>
+                            {{ team_membership.team.name }}
+                        </span>
+                    </div>
+
+                    <div class="profile-detail-row">
+                        <span class="profile-detail-label">
+                            Role
+                        </span>
+                        <span>
+                            {{ team_membership.role.name }}
+                        </span>
+                    </div>
+
+                    <div class="profile-detail-row">
+                        <span class="profile-detail-label">
+                            Manager
+                        </span>
+                        <span>
+
+                            {% if team_membership.team.manager %}
+
+                                {% if team_membership.team.manager.first_name or team_membership.team.manager.last_name %}
+
+                                    {{ team_membership.team.manager.first_name }}
+                                    {{ team_membership.team.manager.last_name }}
+
+                                {% else %}
+
+                                    {{ team_membership.team.manager.username }}
+
+                                {% endif %}
+
+                            {% else %}
+
+                                Not assigned
+
+                            {% endif %}
+
+                        </span>
+                    </div>
+
+                    <div class="profile-detail-row">
+                        <span class="profile-detail-label">
+                            Team Member Since
+                        </span>
+                        <span>
+                            {{ team_membership.date_joined|date:"d/m/Y" }}
+                        </span>
+                    </div>
+                </div>
+
+            {% else %}
+
+                <div class="profile-empty-detail">
+                    <p>
+                        You are not currently assigned to a team.
+                    </p>
+                </div>
+
+            {% endif %}
+
+        </section>
+    </div>
+
+{% include 'accounts/profile/profile_footer.html' with title="Employment details" %}
+
+</div>
+
+{% endblock %}
